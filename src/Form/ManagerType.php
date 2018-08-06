@@ -16,7 +16,7 @@ class ManagerType extends AbstractType
             ->add('lastName')
             ->add('username')
             ->add('email')
-            ->add('password')
+            ->add('plainPassword')
         ;
     }
 

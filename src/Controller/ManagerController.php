@@ -24,7 +24,7 @@ class ManagerController extends Controller
     }
 
     /**
-     * @Route("/new", name="manager_new", methods="GET|POST")
+     * @Route("/signin", name="manager_new", methods="GET|POST")
      */
     public function new(Request $request): Response
     {

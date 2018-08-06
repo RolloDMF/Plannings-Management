@@ -1,0 +1,7 @@
+fos_user:
+    db_driver: orm 
+    firewall_name: main
+    user_class: App\Entity\Manager
+    from_email:
+        address: "clicknsend2018@gmail.com"
+        sender_name: "no reply"
