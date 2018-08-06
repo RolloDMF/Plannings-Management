@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block body %}
+    <h1>Schedule</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ schedule.id }}</td>
+            </tr>
+            <tr>
+                <th>FirstTimeStart</th>
+                <td>{{ schedule.firstTimeStart ? schedule.firstTimeStart|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FirstTimeStop</th>
+                <td>{{ schedule.firstTimeStop ? schedule.firstTimeStop|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>SecondTimeStart</th>
+                <td>{{ schedule.secondTimeStart ? schedule.secondTimeStart|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>SecondTimeStop</th>
+                <td>{{ schedule.secondTimeStop ? schedule.secondTimeStop|date('H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('schedule_index') }}">back to list</a>
+
+    <a href="{{ path('schedule_edit', {'id': schedule.id}) }}">edit</a>
+
+    {{ include('schedule/_delete_form.html.twig') }}
+{% endblock %}
