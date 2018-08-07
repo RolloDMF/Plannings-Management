@@ -20,7 +20,10 @@ class EmployeeController extends Controller
      */
     public function index(EmployeeRepository $employeeRepository): Response
     {
-        return $this->render('employee/index.html.twig', ['employees' => $employeeRepository->findAll()]);
+        return $this->render('employee/index.html.twig', [
+            'employees' => $employeeRepository->findAll(),
+            'page_title' => 'Liste des employés'
+            ]);
     }
 
     /**
@@ -43,6 +46,7 @@ class EmployeeController extends Controller
         return $this->render('employee/new.html.twig', [
             'employee' => $employee,
             'form' => $form->createView(),
+            'page_title' => 'Nouvel employé'
         ]);
     }
 
@@ -51,7 +55,10 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee): Response
     {
-        return $this->render('employee/show.html.twig', ['employee' => $employee]);
+        return $this->render('employee/show.html.twig', [
+            'employee' => $employee,
+            'page_title' => 'Monsieur/Madame : ' . $employee->getLastName()
+            ]);
     }
 
     /**
@@ -71,6 +78,7 @@ class EmployeeController extends Controller
         return $this->render('employee/edit.html.twig', [
             'employee' => $employee,
             'form' => $form->createView(),
+            'page_title' => 'Edition de Monsieur/Madame : ' . $employee->getLastName()
         ]);
     }
 

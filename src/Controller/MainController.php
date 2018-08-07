@@ -14,16 +14,17 @@ class MainController extends Controller
     {
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
-        ]);
-    }
-
-    /**
-     * @Route("/home", name="home")
-     */
-    public function home()
-    {
-        return $this->render('main/home.html.twig', [
-            'controller_name' => 'MainController',
+            ]);
+        }
+        
+        /**
+         * @Route("/home", name="home")
+         */
+        public function home()
+        {
+            return $this->render('main/home.html.twig', [
+                'controller_name' => 'MainController',
+                'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
     }
 }

@@ -20,7 +20,10 @@ class PlanningController extends Controller
      */
     public function index(PlanningRepository $planningRepository): Response
     {
-        return $this->render('planning/index.html.twig', ['plannings' => $planningRepository->findAll()]);
+        return $this->render('planning/index.html.twig', [
+            'plannings' => $planningRepository->findAll(),
+            'page_title' => 'Liste des plannings'
+            ]);
     }
 
     /**
@@ -43,6 +46,7 @@ class PlanningController extends Controller
         return $this->render('planning/new.html.twig', [
             'planning' => $planning,
             'form' => $form->createView(),
+            'page_title' => 'Nouveau planning'
         ]);
     }
 
@@ -51,7 +55,10 @@ class PlanningController extends Controller
      */
     public function show(Planning $planning): Response
     {
-        return $this->render('planning/show.html.twig', ['planning' => $planning]);
+        return $this->render('planning/show.html.twig', [
+            'planning' => $planning,
+            'page_title' => 'Planning semaine n° '
+            ]);
     }
 
     /**
@@ -65,12 +72,14 @@ class PlanningController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('planning_edit', ['id' => $planning->getId()]);
+            return $this->redirectToRoute(
+                'planning_edit', ['id' => $planning->getId()]);
         }
 
         return $this->render('planning/edit.html.twig', [
             'planning' => $planning,
             'form' => $form->createView(),
+            'page_title' => 'Planning semaine n° '
         ]);
     }
 

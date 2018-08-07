@@ -3,6 +3,7 @@
 {% block title %}Manager{% endblock %}
 
 {% block body %}
+{% include 'nav.html.twig' %}
     <h1>Manager</h1>
 
     <table class="table">
@@ -27,14 +28,8 @@
                 <th>Email</th>
                 <td>{{ manager.email }}</td>
             </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ manager.password }}</td>
-            </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('manager_index') }}">back to list</a>
 
     <a href="{{ path('manager_edit', {'id': manager.id}) }}">edit</a>
 

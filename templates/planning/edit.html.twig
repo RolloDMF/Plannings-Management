@@ -3,6 +3,7 @@
 {% block title %}Edit Planning{% endblock %}
 
 {% block body %}
+{% include 'nav.html.twig' %}
     <h1>Edit Planning</h1>
 
     {{ include('planning/_form.html.twig', {'button_label': 'Update'}) }}

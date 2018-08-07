@@ -20,7 +20,10 @@ class ScheduleController extends Controller
      */
     public function index(ScheduleRepository $scheduleRepository): Response
     {
-        return $this->render('schedule/index.html.twig', ['schedules' => $scheduleRepository->findAll()]);
+        return $this->render('schedule/index.html.twig', [
+            'schedules' => $scheduleRepository->findAll(),
+            'page_title' => 'Horraires de l\'entreprise'
+            ]);
     }
 
     /**
@@ -43,6 +46,7 @@ class ScheduleController extends Controller
         return $this->render('schedule/new.html.twig', [
             'schedule' => $schedule,
             'form' => $form->createView(),
+            'page_title' => 'Nouvel Horraire'
         ]);
     }
 
@@ -51,7 +55,10 @@ class ScheduleController extends Controller
      */
     public function show(Schedule $schedule): Response
     {
-        return $this->render('schedule/show.html.twig', ['schedule' => $schedule]);
+        return $this->render('schedule/show.html.twig', [
+            'schedule' => $schedule,
+            'page_title' => 'Horraire'
+            ]);
     }
 
     /**
@@ -71,6 +78,7 @@ class ScheduleController extends Controller
         return $this->render('schedule/edit.html.twig', [
             'schedule' => $schedule,
             'form' => $form->createView(),
+            'page_title' => 'Edition Horraire de l entreprise '. $schedule->getCompany()->getName()
         ]);
     }
 

@@ -1,0 +1,13 @@
+<nav>
+    <div class="page-title">
+        {{ page_title }}
+    </div>
+    <ul>
+        <li><a href="{{ path('planning_index') }}">Mes plannings</a></li>
+        <li><a href="{{ path('employee_index') }}">Employés</a></li>
+        <li><a href="{{ path('company_index') }}">Entreprise</a></li>
+        <li><a href="{{ path('manager_show',{'id': app.user.id } ) }}">Profil</a></li>
+        <li><a href="{{ path('home') }}">Home</a></li>
+        <li><a href="{{ path('security_logout') }}">Deconnexion</a></li>
+    </ul>
+</nav>

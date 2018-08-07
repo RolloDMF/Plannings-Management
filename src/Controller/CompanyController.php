@@ -20,7 +20,9 @@ class CompanyController extends Controller
      */
     public function index(CompanyRepository $companyRepository): Response
     {
-        return $this->render('company/index.html.twig', ['companies' => $companyRepository->findAll()]);
+        return $this->render('company/index.html.twig', [
+            'companies' => $companyRepository->findAll(),
+            'page_title' => 'Liste des entreprises']);
     }
 
     /**
@@ -32,9 +34,13 @@ class CompanyController extends Controller
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
+        $manager = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($company);
+
+            $company->setManager($manager);
             $em->flush();
 
             return $this->redirectToRoute('company_index');
@@ -43,6 +49,7 @@ class CompanyController extends Controller
         return $this->render('company/new.html.twig', [
             'company' => $company,
             'form' => $form->createView(),
+            'page_title' => 'Nouvelle entreprise'
         ]);
     }
 
@@ -51,7 +58,10 @@ class CompanyController extends Controller
      */
     public function show(Company $company): Response
     {
-        return $this->render('company/show.html.twig', ['company' => $company]);
+        return $this->render('company/show.html.twig', [
+            'company' => $company,
+            'page_title' => 'Entreprise ' . $company->getName()
+        ]);
     }
 
     /**
@@ -71,6 +81,7 @@ class CompanyController extends Controller
         return $this->render('company/edit.html.twig', [
             'company' => $company,
             'form' => $form->createView(),
+            'page_title' => 'Edition de l\'entreprise ' . $company->getName()
         ]);
     }
 

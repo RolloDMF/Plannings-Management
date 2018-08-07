@@ -16,14 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ManagerController extends Controller
 {
     /**
-     * @Route("/", name="manager_index", methods="GET")
-     */
-    public function index(ManagerRepository $managerRepository): Response
-    {
-        return $this->render('manager/index.html.twig', ['managers' => $managerRepository->findAll()]);
-    }
-
-    /**
      * @Route("/signin", name="manager_new", methods="GET|POST")
      */
     public function new(Request $request): Response
@@ -35,9 +27,15 @@ class ManagerController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($manager);
+
+            $manager->setEnabled(true);
+            $manager->setSuperAdmin(true);
+
             $em->flush();
 
-            return $this->redirectToRoute('manager_index');
+            return $this->redirectToRoute('login', [
+            "manager" => $manager,
+            ]);
         }
 
         return $this->render('manager/new.html.twig', [
@@ -51,7 +49,10 @@ class ManagerController extends Controller
      */
     public function show(Manager $manager): Response
     {
-        return $this->render('manager/show.html.twig', ['manager' => $manager]);
+        return $this->render('manager/show.html.twig', [
+            'manager' => $manager,
+            'page_title' => 'Profile'
+            ]);
     }
 
     /**
@@ -71,6 +72,7 @@ class ManagerController extends Controller
         return $this->render('manager/edit.html.twig', [
             'manager' => $manager,
             'form' => $form->createView(),
+            'page_title' => 'Edition de Profile'
         ]);
     }
 

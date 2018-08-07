@@ -3,6 +3,7 @@
 {% block title %}New Employee{% endblock %}
 
 {% block body %}
+{% include 'nav.html.twig' %}
     <h1>Create new Employee</h1>
 
     {{ include('employee/_form.html.twig') }}

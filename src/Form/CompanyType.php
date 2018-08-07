@@ -17,7 +17,6 @@ class CompanyType extends AbstractType
             ->add('address')
             ->add('city')
             ->add('zipCode')
-            ->add('manager')
         ;
     }
 

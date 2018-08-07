@@ -12,12 +12,12 @@ class PlanningType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('day')
             ->add('dayDate')
+            ->add('company')
+            ->add('employee')
             ->add('startTime')
             ->add('stopTime')
-            ->add('day')
-            ->add('employee')
-            ->add('company')
         ;
     }
 

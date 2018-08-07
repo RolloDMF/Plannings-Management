@@ -6,6 +6,8 @@ use App\Entity\Manager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class ManagerType extends AbstractType
 {
@@ -16,7 +18,10 @@ class ManagerType extends AbstractType
             ->add('lastName')
             ->add('username')
             ->add('email')
-            ->add('plainPassword')
+            ->add('plainPassword', RepeatedType::class, array(
+                'type' => PasswordType::class,
+                'first_options'  => array('label' => 'Mot de passe'),
+                'second_options' => array('label' => 'Confirmation mot de passe'),))
         ;
     }
 
