@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\DayRepository;
+use App\Entity\Company;
+use App\Entity\Day;
+use App\Repository\CompanyRepository;
 
 /**
  * @Route("/schedule")
@@ -30,23 +33,26 @@ class ScheduleController extends Controller
     /**
      * @Route("/new", name="schedule_new", methods="GET|POST")
      */
-    public function new(Request $request, DayRepository $dayrepo): Response
+    public function new(Request $request, DayRepository $dayRepo, CompanyRepository $companyRepo): Response
     {
 
 
             $companySchedules = $request->request->all();
-           
+            $em = $this->getDoctrine()->getManager();
+            
             foreach ($companySchedules as $datas) {
-
-                dump($datas);
+                
+                $company = $companyRepo->findOneById($datas['company']);
+                $day = $dayRepo->findOneByName($datas['day']);
+                
                 $schedule = new Schedule();
                 $schedule->hydrate($datas);
-
-                $em = $this->getDoctrine()->getManager();
+                $schedule->setCompany($company);
+                $schedule->setDay($day);
+                
                 $em->persist($schedule);
                 
             }
-
             $em->flush();
 
             return $this->redirectToRoute('company_index');

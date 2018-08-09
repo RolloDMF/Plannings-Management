@@ -8,192 +8,34 @@
 
     <form action="{{path('schedule_new')}}" method="POST">
         <div class="d-flex flex-row justify-content-between">
-            <div id="schedule1">
-                <div>
-                    <h2>Lundi</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule1_firstTimeStart" name="schedule1[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule1_firstTimeStop" name="schedule1[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule1_secondTimeStart" name="schedule1[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule1_secondTimeStop" name="schedule1[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule1_day" name="schedule1[day]" value="lundi">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule1_company" name="schedule1[company]" value=" {{ company }} ">
-                </div>
-                
 
-            </div>
-            <div id="schedule2">
+            {% for day in days %}
+            <div id="schedule{{day.id}}" class="schedule{{day.id}}">
                 <div>
-                    <h2>Mardi</h2>
+                    <h2>{{day.name}}</h2>
                     <label class="required">First time start</label>
-                    <input type="time" class="schedule2_firstTimeStart" name="schedule2[firstTimeStart]">
+                    <input type="time" name="schedule{{day.id}}[firstTimeStart]">
                 </div>
                 <div>
                     <label class="required">First time stop</label>
-                    <input type="time" class="schedule2_firstTimeStop" name="schedule2[firstTimeStop]">
+                    <input type="time" name="schedule{{day.id}}[firstTimeStop]">
                 </div>
                 <div>
                     <label class="required">Second time start</label>
-                    <input type="time" class="schedule2_secondTimeStart" name="schedule2[secondTimeStart]">
+                    <input type="time" name="schedule{{day.id}}[secondTimeStart]">
                 </div>
                 <div>
                     <label class="required">Second time stop</label>
-                    <input type="time" class="schedule2_secondTimeStop" name="schedule2[secondTimeStop]">
+                    <input type="time" name="schedule{{day.id}}[secondTimeStop]">
                 </div>
                 <div>
-                    <input type="hidden" class="schedule2_day" name="schedule2[day]" value="mardi">
+                    <input type="hidden" name="schedule{{day.id}}[day]" value="{{day.name}}">
                 </div>
                 <div>
-                    <input type="hidden" class="schedule2_company" name="schedule2[company]" value=" {{ company }} ">
+                    <input type="hidden" name="schedule{{day.id}}[company]" value="{{company.id}}">
                 </div>
-                
-
-            </div>
-            <div id="schedule3">
-                 <div>
-                    <h2>Mercredi</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule3_firstTimeStart" name="schedule3[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule3_firstTimeStop" name="schedule3[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule3_secondTimeStart" name="schedule3[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule3_secondTimeStop" name="schedule3[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule3_day" name="schedule3[day]" value="mercredi">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule3_company" name="schedule3[company]" value=" {{ company }} ">
-                </div>
-                
-
-            </div>
-            <div id="schedule4">
-                <div>
-                    <h2>Jeudi</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule4_firstTimeStart" name="schedule4[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule4_firstTimeStop" name="schedule4[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule4_secondTimeStart" name="schedule4[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule4_secondTimeStop" name="schedule4[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule4_day" name="schedule4[day]" value="jeudi">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule4_company" name="schedule4[company]" value=" {{ company }} ">
-                </div>
-            </div>
-            <div id="schedule5">
-                <div>
-                    <h2>Vendredi</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule5_firstTimeStart" name="schedule5[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule5_firstTimeStop" name="schedule5[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule5_secondTimeStart" name="schedule5[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule5_secondTimeStop" name="schedule5[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule5_day" name="schedule5[day]" value="vendedi">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule5_company" name="schedule5[company]" value=" {{ company }} ">
-                </div>
-                
-
-            </div>
-            <div id="schedule6">
-                <div>
-                    <h2>Samedi</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule6_firstTimeStart" name="schedule6[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule6_firstTimeStop" name="schedule6[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule6_secondTimeStart" name="schedule6[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule6_secondTimeStop" name="schedule6[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule6_day" name="schedule6[day]" value="samedi">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule6_company" name="schedule6[company]" value=" {{ company }} ">
-                </div>
-                
-
-            </div>
-            <div id="schedule7">
-                <div>
-                    <h2>Dimanche</h2>
-                    <label class="required">First time start</label>
-                    <input type="time" class="schedule7_firstTimeStart" name="schedule7[firstTimeStart]">
-                </div>
-                <div>
-                    <label class="required">First time stop</label>
-                    <input type="time" class="schedule7_firstTimeStop" name="schedule7[firstTimeStop]">
-                </div>
-                <div>
-                    <label class="required">Second time start</label>
-                    <input type="time" class="schedule7_secondTimeStart" name="schedule7[secondTimeStart]">
-                </div>
-                <div>
-                    <label class="required">Second time stop</label>
-                    <input type="time" class="schedule7_secondTimeStop" name="schedule7[secondTimeStop]">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule7_day" name="schedule7[day]" value="dimanche">
-                </div>
-                <div>
-                    <input type="hidden" class="schedule7_company" name="schedule7[company]" value=" {{ company }} ">
-                </div>
-            </div>
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            </div>       
+            {% endfor %}
         </div>
         <button type="submit">Enregistrer</button>
     </form>

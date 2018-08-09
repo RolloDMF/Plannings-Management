@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\ScheduleType;
+use App\Repository\DayRepository;
 
 /**
  * @Route("/company")
@@ -29,12 +30,14 @@ class CompanyController extends Controller
     /**
      * @Route("/new", name="company_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, DayRepository $dayrepo): Response
     {
         $company = new Company();
         $form = $this->createForm(CompanyType::class, $company);
 
         $form->handleRequest($request);
+
+        $days = $dayrepo->findAll();
 
         $manager = $this->getUser();
 
@@ -47,8 +50,9 @@ class CompanyController extends Controller
 
             return $this->render('schedule/new.html.twig', [
                 'company' => $company,
+                'days' => $days,
                 'page_title' => 'Nouvel Horraire'
-            ]);;
+            ]);
         }
 
         return $this->render('company/new.html.twig', [

@@ -23,22 +23,22 @@ class Schedule
     private $day;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time", nullable=true)
      */
     private $firstTimeStart;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time", nullable=true)
      */
     private $firstTimeStop;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time", nullable=true)
      */
     private $secondTimeStart;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="time", nullable=true)
      */
     private $secondTimeStop;
 
@@ -127,7 +127,7 @@ class Schedule
 
     public function hydrate($datas)
     {
-        if ($datas["firstTimeStart"] === "") {
+        if ($datas['firstTimeStart'] === "") {
             $time1 = null;
         }else{     
             $time1 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStart']));
@@ -155,7 +155,6 @@ class Schedule
         $this->setFirstTimeStop($time2);
         $this->setSecondTimeStart($time3);
         $this->setSecondTimeStop($time4);
-        $this->setCompany($datas['company']);
-        $this->setDay($datas['day']);
+
     }
 }
