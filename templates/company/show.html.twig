@@ -36,8 +36,27 @@
     </table>
 
     <a href="{{ path('company_index') }}">back to list</a>
-
     <a href="{{ path('company_edit', {'id': company.id}) }}">edit</a>
 
     {{ include('company/_delete_form.html.twig') }}
+    
+    <h2>Horraires</h2>
+    <div class="d-flex flex-row justify-content-between">
+        {% for schedule in company.schedules %}
+        <div>
+            {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
+            <span class="scheduleDay">{{schedule.day.name}} :</span><br>
+            <span class="schedule">
+                {% if schedule.secondTimeStart != null %}
+                Matin : {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}</br>
+                Après-midi : {{schedule.secondTimeStart|date("G:i")}} - {{schedule.secondTimeStop|date("G:i")}}                
+                {% else %}
+                {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}
+                {% endif %}
+            </span>         
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}
