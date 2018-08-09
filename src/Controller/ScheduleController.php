@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\DayRepository;
 
 /**
  * @Route("/schedule")
@@ -29,25 +30,27 @@ class ScheduleController extends Controller
     /**
      * @Route("/new", name="schedule_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, DayRepository $dayrepo): Response
     {
-        $schedule = new Schedule();
-        $form = $this->createForm(ScheduleType::class, $schedule);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($schedule);
+
+            $companySchedules = $request->request->all();
+           
+            foreach ($companySchedules as $datas) {
+
+                dump($datas);
+                $schedule = new Schedule();
+                $schedule->hydrate($datas);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($schedule);
+                
+            }
+
             $em->flush();
 
-            return $this->redirectToRoute('schedule_index');
-        }
+            return $this->redirectToRoute('company_index');
 
-        return $this->render('schedule/new.html.twig', [
-            'schedule' => $schedule,
-            'form' => $form->createView(),
-            'page_title' => 'Nouvel Horraire'
-        ]);
     }
 
     /**

@@ -53,75 +53,109 @@ class Schedule
         return $this->id;
     }
 
-    public function getDay(): ?Day
+    public function getDay()
     {
         return $this->day;
     }
 
-    public function setDay(?Day $day): self
+    public function setDay($day)
     {
         $this->day = $day;
 
         return $this;
     }
 
-    public function getFirstTimeStart(): ?\DateTimeInterface
+    public function getFirstTimeStart()
     {
         return $this->firstTimeStart;
     }
 
-    public function setFirstTimeStart(\DateTimeInterface $firstTimeStart): self
+    public function setFirstTimeStart($firstTimeStart): self
     {
         $this->firstTimeStart = $firstTimeStart;
 
         return $this;
     }
 
-    public function getFirstTimeStop(): ?\DateTimeInterface
+    public function getFirstTimeStop()
     {
         return $this->firstTimeStop;
     }
 
-    public function setFirstTimeStop(\DateTimeInterface $firstTimeStop): self
+    public function setFirstTimeStop($firstTimeStop): self
     {
         $this->firstTimeStop = $firstTimeStop;
 
         return $this;
     }
 
-    public function getSecondTimeStart(): ?\DateTimeInterface
+    public function getSecondTimeStart()
     {
         return $this->secondTimeStart;
     }
 
-    public function setSecondTimeStart(\DateTimeInterface $secondTimeStart): self
+    public function setSecondTimeStart($secondTimeStart): self
     {
         $this->secondTimeStart = $secondTimeStart;
 
         return $this;
     }
 
-    public function getSecondTimeStop(): ?\DateTimeInterface
+    public function getSecondTimeStop()
     {
         return $this->secondTimeStop;
     }
 
-    public function setSecondTimeStop(\DateTimeInterface $secondTimeStop): self
+    public function setSecondTimeStop($secondTimeStop): self
     {
         $this->secondTimeStop = $secondTimeStop;
 
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany()
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompany($company)
     {
         $this->company = $company;
 
         return $this;
+    }
+
+    public function hydrate($datas)
+    {
+        if ($datas["firstTimeStart"] === "") {
+            $time1 = null;
+        }else{     
+            $time1 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStart']));
+        }
+
+        if ($datas['firstTimeStop'] === "") {
+            $time2 = null;
+        }else{
+            $time2 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStop']));
+        }
+
+        if ($datas['secondTimeStart'] === "") {
+            $time3 = null;
+        }else{
+            $time3 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStart']));
+        }
+
+        if ($datas['secondTimeStop'] === "") {
+            $time4 = null;
+        }else{
+            $time4 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStop']));
+        }
+
+        $this->setFirstTimeStart($time1);
+        $this->setFirstTimeStop($time2);
+        $this->setSecondTimeStart($time3);
+        $this->setSecondTimeStop($time4);
+        $this->setCompany($datas['company']);
+        $this->setDay($datas['day']);
     }
 }

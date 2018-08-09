@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\ScheduleType;
 
 /**
  * @Route("/company")
@@ -32,6 +33,7 @@ class CompanyController extends Controller
     {
         $company = new Company();
         $form = $this->createForm(CompanyType::class, $company);
+
         $form->handleRequest($request);
 
         $manager = $this->getUser();
@@ -43,7 +45,10 @@ class CompanyController extends Controller
             $company->setManager($manager);
             $em->flush();
 
-            return $this->redirectToRoute('company_index');
+            return $this->render('schedule/new.html.twig', [
+                'company' => $company,
+                'page_title' => 'Nouvel Horraire'
+            ]);;
         }
 
         return $this->render('company/new.html.twig', [
