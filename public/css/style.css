@@ -1,48 +1,26 @@
-.planning{
-    display: grid;
-    grid-gap: 0.2rem;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: minmax(3.5rem, auto);
-  }
-.lundi{
-    grid-column: 1;
-    background-color:lightgray;
-    text-align: center;
-    border: solid;
-}
-.mardi{
-    grid-column: 2;
+.working-day{
     background-color:lightgray;
     text-align: center;    
     border: solid;
 }
-.mercredi{
-    grid-column: 3;
-    background-color: lightgray;
+.legende{
     text-align: center;
-    border: solid;
+    border: solid 1px;
 }
-.jeudi{
-    grid-column: 4;
-    background-color:lightgray;
-    text-align: center;
-    border: solid;
+.planning-legende{
+    display: grid;
+    grid-column-gap: 0.2rem;
+    grid-auto-rows: minmax(2rem, auto);
 }
-.vendredi{
-    grid-column: 5;
-    background-color:lightgray;
-    text-align: center;
-    border: solid;
+.planning{
+    background-color: rgb(236, 234, 234);
+    display: grid;
+    grid-column-gap: 0.2rem;
+    z-index: 1
 }
-.samedi{
-    grid-column: 6;
-    background-color:lightgray;
-    text-align: center;
-    border: solid;
+.hour{
+    border-top: solid 1px;
 }
-.dimanche{
-    grid-column: 7;
-    background-color: lightgray;
-    text-align: center;
-    border: solid;
+.planning :last-child{
+    background-color: white;
 }
