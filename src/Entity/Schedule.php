@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\ConverterController;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ScheduleRepository")
@@ -157,4 +158,5 @@ class Schedule
         $this->setSecondTimeStop($time4);
 
     }
+
 }

@@ -11,18 +11,18 @@
 {% set column = 2 %}
 
 {% set workDay = 0 %}
-{% for schedule in company.schedules %}
+{% for schedule in formatedSchedules %}
     {% if schedule.secondTimeStop != null %}
-        {% if schedule.secondTimeStop|date("G.i")|round(0, 'ceil') > maxCloseSchedule %}
-            {% set maxCloseSchedule = schedule.secondTimeStop|date("G.i")|round(0, 'ceil') %}
+        {% if schedule.secondTimeStop > maxCloseSchedule %}
+            {% set maxCloseSchedule = schedule.secondTimeStop  %}
         {% endif %}
     {% else %}
-        {% if schedule.firstTimeStop|date("G.i")|round(0, 'ceil') > maxCloseSchedule %}
-            {% set maxCloseSchedule = schedule.firstTimeStop|date("G.i")|round(0, 'ceil') %}
+        {% if schedule.firstTimeStop > maxCloseSchedule %}
+            {% set maxCloseSchedule = schedule.firstTimeStop  %}
         {% endif %}
     {% endif %}
-        {% if schedule.firstTimeStart|date("G.i")|round(0, 'floor') < minOpenSchedule %}
-        {% set minOpenSchedule  = schedule.firstTimeStart|date("G.i")|round(0, 'floor') %}
+        {% if schedule.firstTimeStart < minOpenSchedule and  schedule.firstTimeStart != null %}
+        {% set minOpenSchedule  = schedule.firstTimeStart  %}
     {% endif %}
     {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
         {% set workDay = workDay + 1 %}
@@ -67,23 +67,23 @@
     </div>
     
     <div class="planning">
-        {% for schedule in company.schedules %}
+        {% for schedule in formatedSchedules %}
             {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
 
-                {% set startTime = (schedule.firstTimeStart|date("G.i")|round(0, 'floor') - minOpenSchedule) * 4 + 1 %}
+                {% set startTime = (schedule.firstTimeStart - minOpenSchedule) * 4 + 1 %}
 
                 {% if schedule.secondTimeStart != null %}
 
-                    {% set morningWorkTime = (schedule.firstTimeStop|date("G.i")|round(0, 'ceil') - schedule.firstTimeStart|date("G.i")|round(0, 'floor')) * 4 %}
-                    {% set afternoonWorkTime = (schedule.secondTimeStop|date("G.i")|round(0, 'ceil') - schedule.secondTimeStart|date("G.i")|round(0, 'floor')) * 4 %}
-                    {% set mealBreak = (schedule.secondTimeStart|date("G.i")|round(0, 'floor') - schedule.firstTimeStop|date("G.i")|round(0, 'ceil')) * 4 %}
+                    {% set morningWorkTime = (schedule.firstTimeStop - schedule.firstTimeStart) * 4 %}
+                    {% set afternoonWorkTime = (schedule.secondTimeStop - schedule.secondTimeStart) * 4 %}
+                    {% set mealBreak = (schedule.secondTimeStart - schedule.firstTimeStop) * 4 %}
 
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{morningWorkTime + 1}};"></div>
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + 1}};"></div>
 
                 {% else %}
 
-                    {% set workTime = schedule.firstTimeStop|date("G.i")|round(0, 'ceil') - schedule.firstTimeStart|date("G.i")|round(0, 'floor') %}                
+                    {% set workTime = schedule.firstTimeStop - schedule.firstTimeStart %}                
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + workTime * 4}};"></div>
                     
                 {% endif %}
@@ -99,6 +99,7 @@
             {% set interval = interval + 4 %}
         {% endfor %}
     </div>
+    <h1> {{maxCloseSchedule}} </h1>
     
 </div>
 {% endblock %}
