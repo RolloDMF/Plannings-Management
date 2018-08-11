@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 /**
  * @Route("/planning")
@@ -29,9 +31,13 @@ class PlanningController extends Controller
     /**
      * @Route("/new", name="planning_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, SerializerInterface $serializer)
     {
-        $planning = new Planning();
+        $datas = $request->request->all();
+        $json = $serializer->serialize($datas, 'json');
+
+        return new Response($json);
+/*         $planning = new Planning();
         $form = $this->createForm(PlanningType::class, $planning);
         $form->handleRequest($request);
 
@@ -47,7 +53,7 @@ class PlanningController extends Controller
             'planning' => $planning,
             'form' => $form->createView(),
             'page_title' => 'Nouveau planning'
-        ]);
+        ]); */
     }
 
     /**

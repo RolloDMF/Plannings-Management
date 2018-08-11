@@ -49,6 +49,16 @@ class Planning
      */
     private $company;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $week;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $year;
+
     public function getId()
     {
         return $this->id;
@@ -122,6 +132,30 @@ class Planning
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getWeek(): ?int
+    {
+        return $this->week;
+    }
+
+    public function setWeek(int $week): self
+    {
+        $this->week = $week;
+
+        return $this;
+    }
+
+    public function getYear(): ?\DateTimeInterface
+    {
+        return $this->year;
+    }
+
+    public function setYear(\DateTimeInterface $year): self
+    {
+        $this->year = $year;
 
         return $this;
     }

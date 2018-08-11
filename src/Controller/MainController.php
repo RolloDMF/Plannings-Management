@@ -9,6 +9,8 @@ use App\Repository\CompanyRepository;
 use App\Service\ConverterController;
 use App\Entity\Schedule;
 use App\Repository\ScheduleRepository;
+use App\Form\PlanningType;
+use App\Service\DateWithYWD;
 
 class MainController extends Controller
 {
@@ -28,24 +30,26 @@ class MainController extends Controller
     public function home(Request $request, CompanyRepository $companyRepo, ConverterController $converter, ScheduleRepository $schedulRepo)
     {
         $companyId = $request->request->all();
-        
+
         if ($companyId === []){
-            $companyId = $this->getUser()->getCompany()->getId();
+            $companyId = $this->getUser()->getCompanies()[0]->getId();
         }
         $company = $companyRepo->findOneById($companyId);
         $schedules = $schedulRepo->findByCompany($company);
 
         $formatedSchedules = [];
+        $daysdates = [];
         
         foreach ($schedules as $schedule) {
             $formatedSchedule = $converter->convert($schedule->getId(), $schedulRepo);
             $formatedSchedules[] = $formatedSchedule;
-            dump($formatedSchedule);
+            $daysdates[] = DateWithYWD::dateWithDayActualWeek($schedule->getDay()->getrepresentationNumber());
         }
 
             return $this->render('main/home.html.twig', [
                 'company' => $company,
                 'formatedSchedules' => $formatedSchedules,
+                'daysDates' => $daysdates,
                 'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
     }        

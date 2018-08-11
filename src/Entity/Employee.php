@@ -54,6 +54,11 @@ class Employee
      */
     private $company;
 
+    /**
+     * @ORM\Column(type="string", length=7)
+     */
+    private $color;
+
     public function __construct()
     {
         $this->plannings = new ArrayCollection();
@@ -61,7 +66,7 @@ class Employee
 
     public function __toString()
     {
-       return $this->getName();   
+       return $this->getFirstName();   
     }
 
     public function getId()
@@ -168,6 +173,18 @@ class Employee
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }
