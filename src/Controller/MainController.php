@@ -31,7 +31,11 @@ class MainController extends Controller
     {
         $companyId = $request->request->all();
 
+        
         if ($companyId === []){
+            if ($this->getUser()->getCompanies()[0] === null) {
+                return $this->redirectToRoute('company_new');
+            }
             $companyId = $this->getUser()->getCompanies()[0]->getId();
         }
         $company = $companyRepo->findOneById($companyId);

@@ -26,10 +26,10 @@ class AppFixtures extends Fixture
         $user->setFirstName('Juriens');
         $user->setLastName('Rodrigue');
         $user->setEmail('juriens.rodrigue@gmail.com');
-        $user->setPlainPassword('123456');
+        $user->setPlainPassword('test');
         $user->setSuperAdmin(true);
         $user->setEnabled(true);
-        $user->setUsername('Rollo');
+        $user->setUsername('test');
 
         $manager->persist($user);
 

@@ -6,6 +6,8 @@ use App\Entity\Employee;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use PhpParser\Node\Stmt\Label;
 
 class EmployeeType extends AbstractType
 {
@@ -15,6 +17,7 @@ class EmployeeType extends AbstractType
             ->add('firstName')
             ->add('lastName')
             ->add('email')
+            ->add('color', ColorType::class, array('label' => 'couleur associée'))
             ->add('numberOfHours')
             ->add('remainingLeave')
             ->add('company')
