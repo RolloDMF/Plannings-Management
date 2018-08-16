@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use App\Repository\EmployeeRepository;
+use App\Repository\CompanyRepository;
+use App\Repository\DayRepository;
 
 
 /**
@@ -31,11 +34,23 @@ class PlanningController extends Controller
     /**
      * @Route("/new", name="planning_new", methods="GET|POST")
      */
-    public function new(Request $request, SerializerInterface $serializer)
+    public function new(Request $request, SerializerInterface $serializer, EmployeeRepository $employeeRepo, CompanyRepository $companyRepo, DayRepository $dayRepo)
     {
         $datas = $request->request->all();
-        $json = $serializer->serialize($datas, 'json');
+        
+        $planning = new Planning();
 
+        $company = $companyRepo->findOneById($datas['planning']['company']);
+        $day = $dayRepo->findOneByRepresentationNumber($datas['planning']['day']);
+        $employee = $employeeRepo->findOneById($datas['planning']['employee']);
+
+        $planning->hydrate($datas['planning'], $company, $day, $employee);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($planning);
+        $em->flush();
+
+        $json = $serializer->serialize($datas, 'json');
         return new Response($json);
 /*         $planning = new Planning();
         $form = $this->createForm(PlanningType::class, $planning);

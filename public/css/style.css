@@ -1,6 +1,12 @@
 .container{
 	text-align: center;
 }
+#nav-list{
+	list-style: none;
+}
+#option-list{
+	list-style: none;
+}
 .working-day{
     background-color:lightgray;
     text-align: center;    
@@ -22,7 +28,8 @@
     z-index: 1
 }
 .hour{
-    border-top: solid 1px;
+	border-top: solid 1px;
+	text-align: left;
 }
 .planning :last-child{
     background-color: white;

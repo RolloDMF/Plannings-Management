@@ -55,7 +55,7 @@ class Planning
     private $week;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="smallint")
      */
     private $year;
 
@@ -100,36 +100,36 @@ class Planning
         return $this;
     }
 
-    public function getDay(): ?Day
+    public function getDay()
     {
         return $this->day;
     }
 
-    public function setDay(?Day $day): self
+    public function setDay($day)
     {
         $this->day = $day;
 
         return $this;
     }
 
-    public function getEmployee(): ?Employee
+    public function getEmployee()
     {
         return $this->employee;
     }
 
-    public function setEmployee(?Employee $employee): self
+    public function setEmployee($employee)
     {
         $this->employee = $employee;
 
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany()
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompany($company)
     {
         $this->company = $company;
 
@@ -148,15 +148,32 @@ class Planning
         return $this;
     }
 
-    public function getYear(): ?\DateTimeInterface
+    public function getYear()
     {
         return $this->year;
     }
 
-    public function setYear(\DateTimeInterface $year): self
+    public function setYear($year): self
     {
         $this->year = $year;
 
         return $this;
+    }
+
+    public function hydrate($data, $company, $day, $employee)
+    {
+        print_r($data);
+        $startTime = new \DateTime($data['startTime']);
+        $stopTime = new \DateTime($data['stopTime']);
+        $date = new \DateTime($data['date']);
+
+        $this->setCompany($company);
+        $this->setDay($day);
+        $this->setDayDate($date);
+        $this->setEmployee($employee);
+        $this->setStartTime($startTime);
+        $this->setStopTime($stopTime);
+        $this->setWeek($data['week']);
+        $this->setYear($data['year']);
     }
 }
