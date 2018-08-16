@@ -1,3 +1,6 @@
+.container{
+	text-align: center;
+}
 .working-day{
     background-color:lightgray;
     text-align: center;    
@@ -56,10 +59,9 @@ img.btn_close {
 	float: right;
 	margin: -55px -55px 0 0;
 }
-/*--Gérer la position fixed pour IE6--*/
-*html #fade {
-position: absolute;
+#employee-list a{
+	color: #fff;
 }
-*html .popup_block {
-position: absolute;
+#employee-list{
+	list-style: none;
 }

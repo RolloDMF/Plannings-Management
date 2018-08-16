@@ -9,24 +9,25 @@
 {% set minOpenSchedule  = 24 %}
 {% set maxCloseSchedule = 0 %}
 {% set column = 2 %}
-
+{% set position = 2 %}
 {% set workDay = 0 %}
+
 {% for schedule in formatedSchedules %}
-{% if schedule.secondTimeStop != null %}
-{% if schedule.secondTimeStop > maxCloseSchedule %}
-{% set maxCloseSchedule = schedule.secondTimeStop  %}
-{% endif %}
-{% else %}
-{% if schedule.firstTimeStop > maxCloseSchedule %}
-{% set maxCloseSchedule = schedule.firstTimeStop  %}
-{% endif %}
-{% endif %}
-{% if schedule.firstTimeStart < minOpenSchedule and  schedule.firstTimeStart != null %}
-{% set minOpenSchedule  = schedule.firstTimeStart  %}
-{% endif %}
-{% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-{% set workDay = workDay + 1 %}
-{% endif %}
+    {% if schedule.secondTimeStop != null %}
+        {% if schedule.secondTimeStop > maxCloseSchedule %}
+            {% set maxCloseSchedule = schedule.secondTimeStop  %}
+        {% endif %}
+    {% else %}
+        {% if schedule.firstTimeStop > maxCloseSchedule %}
+            {% set maxCloseSchedule = schedule.firstTimeStop  %}
+        {% endif %}
+    {% endif %}
+    {% if schedule.firstTimeStart < minOpenSchedule and  schedule.firstTimeStart != null %}
+        {% set minOpenSchedule  = schedule.firstTimeStart  %}
+    {% endif %}
+    {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
+        {% set workDay = workDay + 1 %}
+    {% endif %}
 {% endfor %}
 
 {% set maxWorkTime =  (maxCloseSchedule - minOpenSchedule) * 4 %}
@@ -39,6 +40,12 @@
     .planning-legende{
         grid-template-columns: 2rem repeat({{workDay}}, 1fr);
     }
+    {% for employee in company.employees %}
+    .employee{{employee.id}}{
+        background-color: {{employee.color}};
+        opacity: .50;
+    }
+    {% endfor %}
 </style>
 
 <div class="container">
@@ -53,52 +60,58 @@
         <button type="submit">Changer d'entreprise</button>
     </form>
     
-    <ul>
+    <ul class="d-flex flex-raw justify-content-around">
         <li><a href=" {{ path('planning_new') }} "><button>Nouveau planning</button></a></li>
-        <li><a href=""><button>Editer le planning en cours</button></a></li>
         <li><a href=""><button>Envoyer le planning</button></a></li>
+    </ul>
+    <ul id="employee-list" class="d-flex flex-raw justify-content-around">
+        {% for employee in company.employees %}
+            <li class="employee{{employee.id}}"><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}}</a></li>
+        {% endfor %}
     </ul>
     <div class="planning-legende">
         <div></div>
         {% for schedule in company.schedules %}
         {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-        <div class="legende"><a href="#" data-width="500" data-rel="popup1" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
+        <div id="day{{schedule.day.representationNumber}}" class="legende" data-position = "{{position}}"><a href="#" data-width="500" data-rel="popup1" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
+
+        {% set position = position + 1 %}
         {% endif %}
         {% endfor %}
     </div>
     
-    <div class="planning">
+    <div class="planning" data-minOpenSchedule="{{minOpenSchedule}}">
         {% for schedule in formatedSchedules %}
-        {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-        
-        {% set startTime = (schedule.firstTimeStart - minOpenSchedule) * 4 + 1 %}
-        
-        {% if schedule.secondTimeStart != null %}
-        
-        {% set morningWorkTime = (schedule.firstTimeStop - schedule.firstTimeStart) * 4 %}
-        {% set afternoonWorkTime = (schedule.secondTimeStop - schedule.secondTimeStart) * 4 %}
-        {% set mealBreak = (schedule.secondTimeStart - schedule.firstTimeStop) * 4 %}
-        
-        <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{morningWorkTime + 1}};"></div>
-        <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + 1}};"></div>
-        
-        {% else %}
-        
-        {% set workTime = schedule.firstTimeStop - schedule.firstTimeStart %}                
-        <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + workTime * 4}};"></div>
-        
-        {% endif %}
-        
-        {% set column = column + 1 %}
-        
-        {% endif %}
+            {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
+            
+                {% set startTime = (schedule.firstTimeStart - minOpenSchedule) * 4 + 1 %}
+                
+                {% if schedule.secondTimeStart != null %}
+                    
+                    {% set morningWorkTime = (schedule.firstTimeStop - schedule.firstTimeStart) * 4 %}
+                    {% set afternoonWorkTime = (schedule.secondTimeStop - schedule.secondTimeStart) * 4 %}
+                    {% set mealBreak = (schedule.secondTimeStart - schedule.firstTimeStop) * 4 %}
+                    
+                    <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{morningWorkTime + 1}};"></div>
+                    <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + 1}};"></div>
+                    
+                    {% else %}
+                
+                    {% set workTime = schedule.firstTimeStop - schedule.firstTimeStart %}                
+                    <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + workTime * 4}};"></div>
+                
+                {% endif %}
+            
+                {% set column = column + 1 %}
+            
+            {% endif %}
         {% endfor %}
-        
-        {% set interval = 1 %}
-        {% for i in 0..(maxWorkTime / 4) %}
-        <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}}; z-index: 2;">{{minOpenSchedule + i}}h</div>
-        {% set interval = interval + 4 %}
-        {% endfor %}
+    {% set interval = 1 %}
+    {% for i in 0..(maxWorkTime / 4) %}
+    <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}}; z-index: 2;">{{minOpenSchedule + i}}h</div>
+    {% set interval = interval + 4 %}
+    {% endfor %}
+  
     </div>
     
 </div>

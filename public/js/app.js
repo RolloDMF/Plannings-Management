@@ -45,16 +45,19 @@ var app = {
             var year = $('planning_year').val();
             var startTime = $('planning_startTime').val();
             var stopTime = $('planning_stopTime').val();
+            
 
                 //ajax call     
                 $.ajax({
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
+                    dataType: 'json',
                 }).done( function(data) {
-                    console.log(data);             
+                    console.log(data);
+                    app.createPlanning(data['planning']);           
                     $('#fade , .popup_block').fadeOut(function() {
-                        $('#fade, a.close').remove();  
+                        $('#fade').remove();  
                     });
                 }).fail(function(textmsg,errorThrown){
                     console.log(textmsg);
@@ -64,6 +67,37 @@ var app = {
 
             });
 
+    },
+
+    createPlanning: function(data){
+        var id = data['employee'] + data['day'];
+        var column = $("#day" + data['day']).data('position');
+        var minOpenSchedule = $(".planning").data('minopenschedule');
+        var startTime = app.transformTime(data['startTime']);
+        var stopTime = app.transformTime(data['stopTime']);
+        var workTime = stopTime - startTime;
+        var start = (startTime - minOpenSchedule) * 4 + 1;
+        
+        var planningStopTime = start + workTime * 4;
+
+        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">Zboui</div>';
+
+        $('.working-day').last().after(div);
+    },
+
+    transformTime: function(time) {
+
+        var splitedTime = time.split(":");
+
+        if (splitedTime[1] !== 0) {
+            convertedMinuntes = splitedTime[1]/0.6;
+        }else{
+            convertedMinuntes = 0;
+        }
+
+        convertedTime = splitedTime[0] +'.'+ convertedMinuntes;
+
+        return parseFloat(convertedTime);
     }
 
 }
