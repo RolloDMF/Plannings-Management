@@ -59,6 +59,16 @@ class Planning
      */
     private $year;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedStarTime;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedStopTime;
+
     public function getId()
     {
         return $this->id;
@@ -175,5 +185,29 @@ class Planning
         $this->setStopTime($stopTime);
         $this->setWeek($data['week']);
         $this->setYear($data['year']);
+    }
+
+    public function getConvertedStarTime(): ?int
+    {
+        return $this->convertedStarTime;
+    }
+
+    public function setConvertedStarTime(?int $convertedStarTime): self
+    {
+        $this->convertedStarTime = $convertedStarTime;
+
+        return $this;
+    }
+
+    public function getConvertedStopTime(): ?int
+    {
+        return $this->convertedStopTime;
+    }
+
+    public function setConvertedStopTime(?int $convertedStopTime): self
+    {
+        $this->convertedStopTime = $convertedStopTime;
+
+        return $this;
     }
 }

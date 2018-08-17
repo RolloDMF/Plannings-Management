@@ -49,6 +49,46 @@ class Schedule
      */
     private $company;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedFirstTimeStart;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedFirstTimeStop;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedSecondTimeStart;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $convertedSecondTimeStop;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $startTime;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $morningWorkTime;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $afternoonWorkTime;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $mealBreak;
+
     public function getId()
     {
         return $this->id;
@@ -157,6 +197,102 @@ class Schedule
         $this->setSecondTimeStart($time3);
         $this->setSecondTimeStop($time4);
 
+    }
+
+    public function getConvertedFirstTimeStart(): ?int
+    {
+        return $this->convertedFirstTimeStart;
+    }
+
+    public function setConvertedFirstTimeStart(?int $convertedFirstTimeStart): self
+    {
+        $this->convertedFirstTimeStart = $convertedFirstTimeStart;
+
+        return $this;
+    }
+
+    public function getConvertedFirstTimeStop(): ?int
+    {
+        return $this->convertedFirstTimeStop;
+    }
+
+    public function setConvertedFirstTimeStop(?int $convertedFirstTimeStop): self
+    {
+        $this->convertedFirstTimeStop = $convertedFirstTimeStop;
+
+        return $this;
+    }
+
+    public function getConvertedSecondTimeStart(): ?int
+    {
+        return $this->convertedSecondTimeStart;
+    }
+
+    public function setConvertedSecondTimeStart(?int $convertedSecondTimeStart): self
+    {
+        $this->convertedSecondTimeStart = $convertedSecondTimeStart;
+
+        return $this;
+    }
+
+    public function getConvertedSecondTimeStop(): ?int
+    {
+        return $this->convertedSecondTimeStop;
+    }
+
+    public function setConvertedSecondTimeStop(?int $convertedSecondTimeStop): self
+    {
+        $this->convertedSecondTimeStop = $convertedSecondTimeStop;
+
+        return $this;
+    }
+
+    public function getStartTime(): ?int
+    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(?int $startTime): self
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    public function getMorningWorkTime(): ?int
+    {
+        return $this->morningWorkTime;
+    }
+
+    public function setMorningWorkTime(?int $morningWorkTime): self
+    {
+        $this->morningWorkTime = $morningWorkTime;
+
+        return $this;
+    }
+
+    public function getAfternoonWorkTime(): ?int
+    {
+        return $this->afternoonWorkTime;
+    }
+
+    public function setAfternoonWorkTime(?int $afternoonWorkTime): self
+    {
+        $this->afternoonWorkTime = $afternoonWorkTime;
+
+        return $this;
+    }
+
+    public function getMealBreak(): ?int
+    {
+        return $this->mealBreak;
+    }
+
+    public function setMealBreak(?int $mealBreak): self
+    {
+        $this->mealBreak = $mealBreak;
+
+        return $this;
     }
 
 }

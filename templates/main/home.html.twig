@@ -66,7 +66,8 @@
     </ul>
     <ul id="employee-list" class="d-flex flex-raw justify-content-around">
         {% for employee in company.employees %}
-            <li class="employee{{employee.id}}"><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}}</a></li>
+            <li class="employee"><span class="employee{{employee.id}}
+                employee-color"></span><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}}</a></li>
         {% endfor %}
     </ul>
     <div class="planning-legende">
@@ -93,7 +94,8 @@
                     {% set mealBreak = (schedule.secondTimeStart - schedule.firstTimeStop) * 4 %}
                     
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{morningWorkTime + 1}};"></div>
-                    <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + 1}};"></div>
+                    
+                    <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + startTime}};"></div>
                     
                     {% else %}
                 

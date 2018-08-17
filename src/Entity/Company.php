@@ -39,7 +39,7 @@ class Company
     private $city;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
     private $zipCode;
 
