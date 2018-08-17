@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\ConverterController;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PlanningRepository")
@@ -62,7 +63,7 @@ class Planning
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $convertedStarTime;
+    private $convertedStartTime;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -185,16 +186,19 @@ class Planning
         $this->setStopTime($stopTime);
         $this->setWeek($data['week']);
         $this->setYear($data['year']);
+        $this->setConvertedStartTime();
+        $this->setConvertedStopTime();
     }
 
-    public function getConvertedStarTime(): ?int
+    public function getConvertedStartTime(): ?int
     {
-        return $this->convertedStarTime;
+        return $this->convertedStartTime;
     }
 
-    public function setConvertedStarTime(?int $convertedStarTime): self
+    public function setConvertedStartTime(ConverterController $converter)
     {
-        $this->convertedStarTime = $convertedStarTime;
+        $convertedStartTime = $converter->convertTime($this->startTime);
+        $this->convertedStartTime = $convertedStartTime;
 
         return $this;
     }
@@ -206,6 +210,7 @@ class Planning
 
     public function setConvertedStopTime(?int $convertedStopTime): self
     {
+        $convertedStopTime = $converter->convertTime($this->stopTime);
         $this->convertedStopTime = $convertedStopTime;
 
         return $this;

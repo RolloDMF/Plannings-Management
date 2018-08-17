@@ -9,9 +9,7 @@ use App\Repository\ScheduleRepository;
 
 class ConverterController extends Controller
 {
-    /**
-     * @Route("/converter", name="converter")
-     */
+
     public function convert($id, ScheduleRepository $scheduleRepo)
     {
         $schedule = $scheduleRepo->findOneById($id);

@@ -52,23 +52,7 @@ class PlanningController extends Controller
 
         $json = $serializer->serialize($datas, 'json');
         return new Response($json);
-/*         $planning = new Planning();
-        $form = $this->createForm(PlanningType::class, $planning);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($planning);
-            $em->flush();
-
-            return $this->redirectToRoute('planning_index');
-        }
-
-        return $this->render('planning/new.html.twig', [
-            'planning' => $planning,
-            'form' => $form->createView(),
-            'page_title' => 'Nouveau planning'
-        ]); */
     }
 
     /**

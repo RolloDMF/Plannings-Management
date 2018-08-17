@@ -94,7 +94,7 @@
                     {% set mealBreak = (schedule.secondTimeStart - schedule.firstTimeStop) * 4 %}
                     
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{morningWorkTime + 1}};"></div>
-                    
+
                     <div class="{{schedule.day.name}} working-day" style="grid-column: {{column}}; grid-row: {{morningWorkTime + mealBreak + startTime}}/{{morningWorkTime + mealBreak + afternoonWorkTime + startTime}};"></div>
                     
                     {% else %}
@@ -110,7 +110,7 @@
         {% endfor %}
     {% set interval = 1 %}
     {% for i in 0..(maxWorkTime / 4) %}
-    <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}}; z-index: 2;">{{minOpenSchedule + i}}h</div>
+    <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}};">{{minOpenSchedule + i}}h</div>
     {% set interval = interval + 4 %}
     {% endfor %}
   
