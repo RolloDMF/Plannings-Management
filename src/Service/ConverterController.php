@@ -49,12 +49,18 @@ class ConverterController extends Controller
     public function convertTime($time)
     {
         //converte base 60 number to base 100
-        if (floatval($time->format("0.i")) !== 0) {
-            $minutesFloat = floatval($time->format("0.i")) / 0.6;
+        if (($time->format("i")) !== 0) {
+            $minutesFloat = ($time->format("i")) / 60;
+            dump($minutesFloat);
+
         }else {
             $minutesFloat = 0;
+            dump($minutesFloat);
+
         }
-        $fomatedTime = floatval($time->format("G")) + $minutesFloat;
-        return $fomatedTime;
+        $formatedTime = ($time->format("G")) + $minutesFloat;
+        var_dump($formatedTime);
+
+        return ($formatedTime);
     }
 }

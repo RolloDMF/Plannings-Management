@@ -61,12 +61,12 @@ class Planning
     private $year;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal", precision=4, scale=2,, nullable=true)
      */
     private $convertedStartTime;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal", precision=4, scale=2,, nullable=true)
      */
     private $convertedStopTime;
 
@@ -190,7 +190,7 @@ class Planning
         $this->setConvertedStopTime($converter);
     }
 
-    public function getConvertedStartTime(): ?int
+    public function getConvertedStartTime()
     {
         return $this->convertedStartTime;
     }
@@ -203,7 +203,7 @@ class Planning
         return $this;
     }
 
-    public function getConvertedStopTime(): ?int
+    public function getConvertedStopTime()
     {
         return $this->convertedStopTime;
     }
