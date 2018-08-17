@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use App\Repository\EmployeeRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\DayRepository;
+use App\Service\ConverterController;
 
 
 /**
@@ -34,7 +35,7 @@ class PlanningController extends Controller
     /**
      * @Route("/new", name="planning_new", methods="GET|POST")
      */
-    public function new(Request $request, SerializerInterface $serializer, EmployeeRepository $employeeRepo, CompanyRepository $companyRepo, DayRepository $dayRepo)
+    public function new(Request $request, SerializerInterface $serializer, EmployeeRepository $employeeRepo, CompanyRepository $companyRepo, DayRepository $dayRepo, ConverterController $converter)
     {
         $datas = $request->request->all();
         
@@ -44,7 +45,7 @@ class PlanningController extends Controller
         $day = $dayRepo->findOneByRepresentationNumber($datas['planning']['day']);
         $employee = $employeeRepo->findOneById($datas['planning']['employee']);
 
-        $planning->hydrate($datas['planning'], $company, $day, $employee);
+        $planning->hydrate($datas['planning'], $company, $day, $employee, $converter);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($planning);

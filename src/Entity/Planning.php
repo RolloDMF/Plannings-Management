@@ -171,7 +171,7 @@ class Planning
         return $this;
     }
 
-    public function hydrate($data, $company, $day, $employee)
+    public function hydrate($data, $company, $day, $employee, $converter)
     {
         print_r($data);
         $startTime = new \DateTime($data['startTime']);
@@ -186,8 +186,8 @@ class Planning
         $this->setStopTime($stopTime);
         $this->setWeek($data['week']);
         $this->setYear($data['year']);
-        $this->setConvertedStartTime();
-        $this->setConvertedStopTime();
+        $this->setConvertedStartTime($converter);
+        $this->setConvertedStopTime($converter);
     }
 
     public function getConvertedStartTime(): ?int
@@ -208,7 +208,7 @@ class Planning
         return $this->convertedStopTime;
     }
 
-    public function setConvertedStopTime(?int $convertedStopTime): self
+    public function setConvertedStopTime(ConverterController $converter): self
     {
         $convertedStopTime = $converter->convertTime($this->stopTime);
         $this->convertedStopTime = $convertedStopTime;

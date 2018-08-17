@@ -72,11 +72,6 @@ class Schedule
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $startTime;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
     private $morningWorkTime;
 
     /**
@@ -166,30 +161,40 @@ class Schedule
         return $this;
     }
 
-    public function hydrate($datas)
+    public function hydrate($datas, ConverterController $converter)
     {
         if ($datas['firstTimeStart'] === "") {
             $time1 = null;
         }else{     
             $time1 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStart']));
+            $this->setConvertedFirstTimeStart($converter->convertTime($time1));
         }
 
         if ($datas['firstTimeStop'] === "") {
             $time2 = null;
         }else{
             $time2 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStop']));
+            $this->setConvertedFirstTimeStop($converter->convertTime($time2));
+            // if there is a first time stop , we define morning work time
+            $this->setMorningWorkTime(($this->firstTimeStop - $this->firstTimeStart) * 4);
         }
 
         if ($datas['secondTimeStart'] === "") {
             $time3 = null;
         }else{
             $time3 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStart']));
+            $this->setConvertedSecondTimeStart($converter->convertTime($time3));
+            //if there is a second time start , we define mealbreak
+            $this->setMealBreak(($this->convertedFirstTimeStop - $this->convertedSecondTimeStart) * 4);
         }
 
         if ($datas['secondTimeStop'] === "") {
             $time4 = null;
         }else{
             $time4 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStop']));
+            $this->setConvertedSecondTimeStop($converter->convertTime($time4));
+            //if there is a second time stop, we define afternoon wok time
+            $this->setAfternoonWorkTime(($this->secondTimeStop - $this->secondTimeStart) * 4);
         }
 
         $this->setFirstTimeStart($time1);
@@ -243,18 +248,6 @@ class Schedule
     public function setConvertedSecondTimeStop(?int $convertedSecondTimeStop): self
     {
         $this->convertedSecondTimeStop = $convertedSecondTimeStop;
-
-        return $this;
-    }
-
-    public function getStartTime(): ?int
-    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(?int $startTime): self
-    {
-        $this->startTime = $startTime;
 
         return $this;
     }

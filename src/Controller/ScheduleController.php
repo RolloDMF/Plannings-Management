@@ -13,6 +13,7 @@ use App\Repository\DayRepository;
 use App\Entity\Company;
 use App\Entity\Day;
 use App\Repository\CompanyRepository;
+use App\Service\ConverterController;
 
 /**
  * @Route("/schedule")
@@ -33,7 +34,7 @@ class ScheduleController extends Controller
     /**
      * @Route("/new", name="schedule_new", methods="GET|POST")
      */
-    public function new(Request $request, DayRepository $dayRepo, CompanyRepository $companyRepo): Response
+    public function new(Request $request, DayRepository $dayRepo, CompanyRepository $companyRepo, ConverterController $converter): Response
     {
 
 
@@ -46,7 +47,7 @@ class ScheduleController extends Controller
                 $day = $dayRepo->findOneByName($datas['day']);
                 
                 $schedule = new Schedule();
-                $schedule->hydrate($datas);
+                $schedule->hydrate($datas, $converter);
                 $schedule->setCompany($company);
                 $schedule->setDay($day);
                 
