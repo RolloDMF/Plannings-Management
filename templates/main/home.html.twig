@@ -57,6 +57,7 @@
             <option value="{{company.id}}">{{company.name}}</option>
             {% endfor %}
         </select>
+        <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
         <button type="submit">Changer d'entreprise</button>
     </form>
     

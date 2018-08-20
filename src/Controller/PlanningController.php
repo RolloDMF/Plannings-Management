@@ -14,6 +14,7 @@ use App\Repository\EmployeeRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\DayRepository;
 use App\Service\ConverterController;
+use App\Entity\Company;
 
 
 /**
@@ -103,5 +104,17 @@ class PlanningController extends Controller
         }
 
         return $this->redirectToRoute('planning_index');
+    }
+
+    /**
+     * @Route("/lastid/{id}", name="planning_lastid",  methods="GET|POST")
+     */
+    public function lastId(PlanningRepository $planingRepo, Company $company, SerializerInterface $serializer)
+    {
+        $lastPlaning = $planingRepo->findLast($company);
+        $id = $lastPlaning->getId();
+
+        $json = $serializer->serialize($id, 'json');
+        return new Response($json);
     }
 }

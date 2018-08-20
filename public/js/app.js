@@ -62,8 +62,11 @@ var app = {
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
                     data: $(this).serializeArray(),
-                }).done( function(){    
-                    app.createPlanning(data);           
+                }).done( function(response){
+                    jQuery.getJSON( $('#company-id').data('path'), function(datas) {
+                        var id = datas
+                        app.createPlanning(data, id);           
+                    });
                     $('#fade , .popup_block').fadeOut(function() {
                         $('#fade').remove();  
                     });
@@ -76,18 +79,20 @@ var app = {
 
     },
 
-    createPlanning: function(data){
-        var id = data['employee'] + data['day'];
+    createPlanning: function(data, id){
+        var id = id;
         var column = $("#day" + data['day']).data('position');
         var minOpenSchedule = $(".planning").data('minopenschedule');
         var startTime = app.transformTime(data['startTime']);
         var stopTime = app.transformTime(data['stopTime']);
         var workTime = stopTime - startTime;
         var start = (startTime - minOpenSchedule) * 4 + 1;
+
+        var employeeFName = $('#planning_employee option[value="'+ data['employee'] +'"]').text();
         
         var planningStopTime = start + workTime * 4;
 
-        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';"></div>';
+        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + startTime +  '-'+ stopTime + '</div>';
 
         $('.working-day').last().after(div);
     },

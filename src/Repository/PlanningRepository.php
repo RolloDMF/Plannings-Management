@@ -47,4 +47,16 @@ class PlanningRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findLast($companyId)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.company = :val')
+            ->setParameter('val', $companyId)
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
