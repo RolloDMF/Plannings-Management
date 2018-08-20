@@ -61,12 +61,12 @@ class Planning
     private $year;
 
     /**
-     * @ORM\Column(type="decimal", precision=4, scale=2,, nullable=true)
+     * @ORM\Column(type="decimal", precision=4, scale=2, nullable=true)
      */
     private $convertedStartTime;
 
     /**
-     * @ORM\Column(type="decimal", precision=4, scale=2,, nullable=true)
+     * @ORM\Column(type="decimal", precision=4, scale=2, nullable=true)
      */
     private $convertedStopTime;
 

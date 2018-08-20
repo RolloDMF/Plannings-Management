@@ -33,7 +33,7 @@ class PlanningController extends Controller
     }
 
     /**
-     * @Route("/new", name="planning_new", methods="GET|POST")
+     * @Route("/new", name="planning_new", methods="POST")
      */
     public function new(Request $request, SerializerInterface $serializer, EmployeeRepository $employeeRepo, CompanyRepository $companyRepo, DayRepository $dayRepo, ConverterController $converter)
     {
@@ -47,12 +47,14 @@ class PlanningController extends Controller
 
         $planning->hydrate($datas['planning'], $company, $day, $employee, $converter);
 
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($planning);
         $em->flush();
 
         $json = $serializer->serialize($datas, 'json');
         return new Response($json);
+        
 
     }
 

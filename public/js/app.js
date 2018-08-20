@@ -35,27 +35,35 @@ var app = {
             return false;
         });
 
-        $('#planning-form').on('submit', function (e) {
+        $('#planning-form').on('submit', function () {
 
-            var dayDate = $('planning_date').val();
-            var day = $('planning_day').val();
-            var employee = $('planning_employee').val();
-            var company = $('planning_company').val();
-            var week = $('planning_week').val();
-            var year = $('planning_year').val();
-            var startTime = $('planning_startTime').val();
-            var stopTime = $('planning_stopTime').val();
-            
+            var dayDate = $('#planning_date').val();
+            var day = $('#planning_day').val();
+            var employee = $('#planning_employee').val();
+            var company = $('#planning_company').val();
+            var week = $('#planning_week').val();
+            var year = $('#planning_year').val();
+            var startTime = $('#planning_startTime').val();
+            var stopTime = $('#planning_stopTime').val();
+
+            var data = {
+                "date": dayDate,
+                "day": day,
+                "employee": employee,
+                "company": company,
+                "week": week,
+                "year": year,
+                "startTime": startTime,
+                "stopTime": stopTime,
+            }
 
                 //ajax call     
                 $.ajax({
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                }).done( function(data) {
-                    console.log(data);
-                    app.createPlanning(data['planning']);           
+                    data: $(this).serializeArray(),
+                }).done( function(){    
+                    app.createPlanning(data);           
                     $('#fade , .popup_block').fadeOut(function() {
                         $('#fade').remove();  
                     });
@@ -64,7 +72,6 @@ var app = {
                     console.log(errorThrown);
                 });
                 return false;
-
             });
 
     },
@@ -80,7 +87,7 @@ var app = {
         
         var planningStopTime = start + workTime * 4;
 
-        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">Zboui</div>';
+        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';"></div>';
 
         $('.working-day').last().after(div);
     },

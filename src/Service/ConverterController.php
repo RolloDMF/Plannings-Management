@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\Schedule;
 use App\Repository\ScheduleRepository;
+use PhpParser\Node\Stmt\Break_;
 
 class ConverterController extends Controller
 {
@@ -51,16 +52,46 @@ class ConverterController extends Controller
         //converte base 60 number to base 100
         if (($time->format("i")) !== 0) {
             $minutesFloat = ($time->format("i")) / 60;
-            dump($minutesFloat);
-
         }else {
             $minutesFloat = 0;
-            dump($minutesFloat);
-
         }
-        $formatedTime = ($time->format("G")) + $minutesFloat;
-        var_dump($formatedTime);
+        if ($minutesFloat) {
+            $formatedTime = ($time->format("G")) + 1;
+        }else{
+            $formatedTime = ($time->format("G")) + $this->round($minutesFloat);
+        }
 
         return ($formatedTime);
+    }
+
+    public function round($minutesFloat)
+    {
+        //we transform value on quarter of 100
+        switch (true) {
+            case ($minutesFloat >= 13 && $minutesFloat < 38):
+                $minutesFloat = 25;
+                return $minutesFloat;
+                break;
+
+            case ($minutesFloat >= 38 && $minutesFloat < 63):
+                $minutesFloat = 50;
+                return $minutesFloat;
+                break;
+
+            case ($minutesFloat >= 63 && $minutesFloat < 88):
+                $minutesFloat = 75;
+                return $minutesFloat;
+                break;
+
+            case ($minutesFloat >= 88):
+                $minutesFloat = true;
+                return $minutesFloat;
+                break;
+
+            default:
+                $minutesFloat = 0;
+                return $minutesFloat;
+                break;
+        }
     }
 }
