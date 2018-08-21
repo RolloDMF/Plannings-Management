@@ -51,11 +51,11 @@ class ConverterController extends Controller
     {
         //converte base 60 number to base 100
         if (($time->format("i")) !== 0) {
-            $minutesFloat = ($time->format("i")) / 60;
+            $minutesFloat = ($time->format("i")) / 0.6;
         }else {
             $minutesFloat = 0;
         }
-        if ($minutesFloat) {
+        if ($minutesFloat >= 88) {
             $formatedTime = ($time->format("G")) + 1;
         }else{
             $formatedTime = ($time->format("G")) + $this->round($minutesFloat);
@@ -69,22 +69,17 @@ class ConverterController extends Controller
         //we transform value on quarter of 100
         switch (true) {
             case ($minutesFloat >= 13 && $minutesFloat < 38):
-                $minutesFloat = 25;
+                $minutesFloat = 25/100;
                 return $minutesFloat;
                 break;
 
             case ($minutesFloat >= 38 && $minutesFloat < 63):
-                $minutesFloat = 50;
+                $minutesFloat = 50/100;
                 return $minutesFloat;
                 break;
 
             case ($minutesFloat >= 63 && $minutesFloat < 88):
-                $minutesFloat = 75;
-                return $minutesFloat;
-                break;
-
-            case ($minutesFloat >= 88):
-                $minutesFloat = true;
+                $minutesFloat = 75/100;
                 return $minutesFloat;
                 break;
 

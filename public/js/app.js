@@ -86,13 +86,14 @@ var app = {
         var startTime = app.transformTime(data['startTime']);
         var stopTime = app.transformTime(data['stopTime']);
         var workTime = stopTime - startTime;
-        var start = (startTime - minOpenSchedule) * 4 + 1;
+        var shift = $(".planning").data('shift');
+        var start = (startTime - minOpenSchedule + shift) * 4 + 1;
 
         var employeeFName = $('#planning_employee option[value="'+ data['employee'] +'"]').text();
         
         var planningStopTime = start + workTime * 4;
 
-        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + startTime +  '-'+ stopTime + '</div>';
+        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
 
         $('.working-day').last().after(div);
     },

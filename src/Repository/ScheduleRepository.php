@@ -47,4 +47,49 @@ class ScheduleRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findMinSchedule($company)
+    {
+        $qb = $this->createQueryBuilder('s');
+        return $qb
+            ->andWhere('s.company = :val')
+            ->andWhere($qb->expr()->isNotNull('s.convertedFirstTimeStart'))
+            ->setParameter('val', $company)
+            ->orderBy('s.firstTimeStart', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findMaxSchedule($company)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $maxFirtsTime = $qb
+            ->andWhere('s.company = :val')
+            ->andWhere($qb->expr()->isNotNull('s.convertedFirstTimeStop'))
+            ->setParameter('val', $company)
+            ->orderBy('s.firstTimeStop', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        $qb = $this->createQueryBuilder('s');
+        $maxSecondTime = $qb
+            ->andWhere('s.company = :val')
+            ->andWhere($qb->expr()->isNotNull('s.convertedSecondTimeStop'))
+            ->setParameter('val', $company)
+            ->orderBy('s.secondTimeStop', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        if ($maxFirtsTime > $maxSecondTime) {
+            return $maxFirtsTime;
+        }else {
+            return $maxSecondTime;
+        }
+    }
 }

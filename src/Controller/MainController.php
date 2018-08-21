@@ -41,18 +41,19 @@ class MainController extends Controller
         $company = $companyRepo->findOneById($companyId);
         $schedules = $schedulRepo->findByCompany($company);
 
-        $formatedSchedules = [];
+        $minOpenSchedule = $schedulRepo->findMinSchedule($company);
+        $maxCloseSchedule = $schedulRepo->findMaxSchedule($company);
+
         $daysdates = [];
         
         foreach ($schedules as $schedule) {
-            $formatedSchedule = $converter->convert($schedule->getId(), $schedulRepo);
-            $formatedSchedules[] = $formatedSchedule;
             $daysdates[] = DateWithYWD::dateWithDayActualWeek($schedule->getDay()->getrepresentationNumber());
         }
 
             return $this->render('main/home.html.twig', [
                 'company' => $company,
-                'formatedSchedules' => $formatedSchedules,
+                'minSchedule' => $minOpenSchedule,
+                'maxSchedule' => $maxCloseSchedule,
                 'daysDates' => $daysdates,
                 'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
