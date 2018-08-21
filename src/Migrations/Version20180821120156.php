@@ -8,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20180817085927 extends AbstractMigration
+final class Version20180821120156 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
@@ -20,7 +20,7 @@ final class Version20180817085927 extends AbstractMigration
         $this->addSql('CREATE TABLE company (id INT AUTO_INCREMENT NOT NULL, manager_id INT NOT NULL, name VARCHAR(255) NOT NULL, logo VARCHAR(255) DEFAULT NULL, address VARCHAR(255) NOT NULL, city VARCHAR(100) NOT NULL, zip_code INT NOT NULL, INDEX IDX_4FBF094F783E3463 (manager_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE manager (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(180) NOT NULL, username_canonical VARCHAR(180) NOT NULL, email VARCHAR(180) NOT NULL, email_canonical VARCHAR(180) NOT NULL, enabled TINYINT(1) NOT NULL, salt VARCHAR(255) DEFAULT NULL, password VARCHAR(255) NOT NULL, last_login DATETIME DEFAULT NULL, confirmation_token VARCHAR(180) DEFAULT NULL, password_requested_at DATETIME DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, UNIQUE INDEX UNIQ_FA2425B992FC23A8 (username_canonical), UNIQUE INDEX UNIQ_FA2425B9A0D96FBF (email_canonical), UNIQUE INDEX UNIQ_FA2425B9C05FB297 (confirmation_token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE employee (id INT AUTO_INCREMENT NOT NULL, company_id INT NOT NULL, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, email VARCHAR(100) DEFAULT NULL, number_of_hours NUMERIC(5, 2) NOT NULL, remaining_leave NUMERIC(5, 2) NOT NULL, color VARCHAR(7) NOT NULL, INDEX IDX_5D9F75A1979B1AD6 (company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE planning (id INT AUTO_INCREMENT NOT NULL, day_id INT NOT NULL, employee_id INT NOT NULL, company_id INT NOT NULL, day_date DATE NOT NULL, start_time TIME NOT NULL, stop_time TIME NOT NULL, week SMALLINT NOT NULL, year SMALLINT NOT NULL, converted_start_time INT DEFAULT NULL, converted_stop_time INT DEFAULT NULL, INDEX IDX_D499BFF69C24126 (day_id), INDEX IDX_D499BFF68C03F15C (employee_id), INDEX IDX_D499BFF6979B1AD6 (company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE planning (id INT AUTO_INCREMENT NOT NULL, day_id INT NOT NULL, employee_id INT NOT NULL, company_id INT NOT NULL, day_date DATE NOT NULL, start_time TIME NOT NULL, stop_time TIME NOT NULL, week SMALLINT NOT NULL, year SMALLINT NOT NULL, converted_start_time NUMERIC(4, 2) DEFAULT NULL, converted_stop_time NUMERIC(4, 2) DEFAULT NULL, work_time NUMERIC(5, 2) NOT NULL, INDEX IDX_D499BFF69C24126 (day_id), INDEX IDX_D499BFF68C03F15C (employee_id), INDEX IDX_D499BFF6979B1AD6 (company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE schedule ADD CONSTRAINT FK_5A3811FB9C24126 FOREIGN KEY (day_id) REFERENCES day (id)');
         $this->addSql('ALTER TABLE schedule ADD CONSTRAINT FK_5A3811FB979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id)');
         $this->addSql('ALTER TABLE company ADD CONSTRAINT FK_4FBF094F783E3463 FOREIGN KEY (manager_id) REFERENCES manager (id)');

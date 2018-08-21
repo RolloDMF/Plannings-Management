@@ -59,4 +59,24 @@ class PlanningRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+
+    public function findActualByCompany($company)
+    {
+
+        $year = new \Datetime();
+        $week = new \DateTime();
+
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.week = :week')
+            ->andWhere('p.year = :year')
+            ->andWhere('p.company = :company')
+            ->setParameter('week', $week->format('W'))
+            ->setParameter('year', $year->format('Y'))
+            ->setParameter('company', $company)
+            ->orderBy('p.day')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

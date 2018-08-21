@@ -11,6 +11,7 @@ use App\Entity\Schedule;
 use App\Repository\ScheduleRepository;
 use App\Form\PlanningType;
 use App\Service\DateWithYWD;
+use App\Repository\PlanningRepository;
 
 class MainController extends Controller
 {
@@ -27,7 +28,7 @@ class MainController extends Controller
     /**
      * @Route("/home", name="home", methods="GET|POST")
      */
-    public function home(Request $request, CompanyRepository $companyRepo, ConverterController $converter, ScheduleRepository $schedulRepo)
+    public function home(Request $request, CompanyRepository $companyRepo, ConverterController $converter, ScheduleRepository $schedulRepo, PlanningRepository $planningRepo)
     {
         $companyId = $request->request->all();
 
@@ -50,11 +51,14 @@ class MainController extends Controller
             $daysdates[] = DateWithYWD::dateWithDayActualWeek($schedule->getDay()->getrepresentationNumber());
         }
 
+        $plannings = $planningRepo->findActualByCompany($company);
+
             return $this->render('main/home.html.twig', [
                 'company' => $company,
                 'minSchedule' => $minOpenSchedule,
                 'maxSchedule' => $maxCloseSchedule,
                 'daysDates' => $daysdates,
+                'plannings' => $plannings,
                 'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
     }        

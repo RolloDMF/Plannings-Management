@@ -70,6 +70,11 @@ class Planning
      */
     private $convertedStopTime;
 
+    /**
+     * @ORM\Column(type="decimal", precision=5, scale=2)
+     */
+    private $workTime;
+
     public function getId()
     {
         return $this->id;
@@ -188,6 +193,7 @@ class Planning
         $this->setYear($data['year']);
         $this->setConvertedStartTime($converter);
         $this->setConvertedStopTime($converter);
+        $this->setWorkTime();
     }
 
     public function getConvertedStartTime()
@@ -212,6 +218,18 @@ class Planning
     {
         $convertedStopTime = $converter->convertTime($this->stopTime);
         $this->convertedStopTime = $convertedStopTime;
+
+        return $this;
+    }
+
+    public function getWorkTime()
+    {
+        return $this->workTime;
+    }
+
+    public function setWorkTime(): self
+    {
+        $this->workTime = $this->convertedStopTime - $this->convertedStartTime;
 
         return $this;
     }
