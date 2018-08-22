@@ -37,7 +37,6 @@ var app = {
 
         /* make last hour line white */
         var hours = $('.hour');
-        console.log(hours[hours.length - 1]);
         $(hours[hours.length - 1]).css({'background-color' : 'white'})
 
         $('#planning-form').on('submit', function () {
@@ -86,21 +85,43 @@ var app = {
 
     createPlanning: function(data, id){
         var id = id;
-        var column = $("#day" + data['day']).data('position');
-        var minOpenSchedule = $(".planning").data('minopenschedule');
         var startTime = app.transformTime(data['startTime']);
         var stopTime = app.transformTime(data['stopTime']);
         var workTime = stopTime - startTime;
-        var shift = $(".planning").data('shift');
-        var start = (startTime - minOpenSchedule + shift) * 4 + 1;
 
+        
         var employeeFName = $('#planning_employee option[value="'+ data['employee'] +'"]').text();
         
-        var planningStopTime = start + workTime * 4;
+        
+        if (startTime > $('#' + data['day'] + 'morning').data('morning')) {
+            
+            var column = $('#' + data['day'] + 'afternoon div:last-child').data('column') + 1;
+            if (isNaN(column)) {
+                column = 1;
+            };
+            var start = (startTime - $('#' + data['day'] + 'afternoon').data('secondtimestart')) * 4 + 1;
+            var planningStopTime = start + workTime * 4;
+            
+            var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+            
+            $("#" + data['day'] + 'afternoon').append(div);
 
-        var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+        }else{
+            
+            var column = $('#' + data['day'] + 'morning div:last-child').data('column') + 1;
+            if (isNaN(column)) {
+                column = 1;
+            };
+            var start = (startTime - $('#' + data['day'] + 'morning').data('firsttimestart')) * 4 + 1;
+            var planningStopTime = start + workTime * 4;
 
-        $("#day" + data['day']).append(div);
+            var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+
+            $("#" + data['day'] + 'morning').append(div);
+
+        }
+
+
     },
 
     transformTime: function(time) {

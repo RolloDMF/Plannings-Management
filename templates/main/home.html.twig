@@ -109,26 +109,23 @@
 
                 {% for planning in plannings %}
                     {% if planning.day == schedule.day %}
-                        {% if schedule.convertedFirstTimeStart > planning.convertedStartTime < schedule.convertedFirstTimeStop %}
+                        {% if  planning.convertedStartTime < schedule.convertedFirstTimeStop %}
                             {% set dayPlanningMorning = dayPlanningMorning|merge([planning]) %}
-                        {% elseif schedule.convertedFirstTimeStart > planning.convertedStartTime < schedule.convertedFirstTimeStop %}
+                        {% else %}
                             {% set dayPlanningAfternoon = dayPlanningAfternoon|merge([planning]) %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
                 
                 
-                <div id="{{schedule.day.representationNumber}}morning" class="working-day" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
+                <div id="{{schedule.day.representationNumber}}morning" class="working-day" data-firsttimestart="{{schedule.convertedFirstTimeStart}}" data-morning="{{schedule.convertedFirstTimeStop}}" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
 
                     {% set columnMorning = 1 %}
                     
                     {% for planning in dayPlanningMorning %}
                     {% set start = (planning.convertedStartTime - schedule.convertedFirstTimeStart) * 4  + 1 %}
-                    {% if start == 0 %}
-                    {% set start = 1 %}
-                    {% endif %}
                     
-                    <div class="employee{{planning.employee.id}}" id="{{planning.id}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
+                    <div class="employee{{planning.employee.id}}" id="{{planning.id}}" data-column="{{columnMorning}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
                         {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
                     </div>
                     {% set columnMorning = columnMorning + 1 %}
@@ -138,14 +135,15 @@
                 
                 {% if schedule.convertedSecondTimeStart != null %}
 
-                    <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
-
-                        {% set columnAfternoon = 1 %}
-                        
+                
+                <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" data-secondtimestart="{{schedule.convertedSecondTimeStart}}" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
+                    
+                    {% set columnAfternoon = 1 %}
+                    
                         {% for planning in dayPlanningAfternoon %}
-                        {% set start = (planning.convertedStartTime - minOpenSchedule + shift) * 4 + 1 %}
+                        {% set startAfternoon = (planning.convertedStartTime - schedule.convertedSecondTimeStart) * 4 + 1 %}
                         
-                        <div class="employee{{planning.employee.id}}" id="{{planning.id}}" style="grid-column:{{column}}; grid-row: {{start}}/{{start + planning.workTime * 4}};">
+                        <div class="employee{{planning.employee.id}}" id="{{planning.id}}" data-column="{{columnAfternoon}}" style="grid-column:{{columnAfternoon}}; grid-row: {{startAfternoon}}/{{planning.workTime * 4 + startAfternoon}};">
                             {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
                         </div>
                         
