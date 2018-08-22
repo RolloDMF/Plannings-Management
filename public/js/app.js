@@ -35,6 +35,11 @@ var app = {
             return false;
         });
 
+        /* make last hour line white */
+        var hours = $('.hour');
+        console.log(hours[hours.length - 1]);
+        $(hours[hours.length - 1]).css({'background-color' : 'white'})
+
         $('#planning-form').on('submit', function () {
 
             var dayDate = $('#planning_date').val();
@@ -95,7 +100,7 @@ var app = {
 
         var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
 
-        $('.working-day').last().after(div);
+        $("#day" + data['day']).append(div);
     },
 
     transformTime: function(time) {
@@ -111,7 +116,7 @@ var app = {
         convertedTime = splitedTime[0] +'.'+ convertedMinuntes;
 
         return parseFloat(convertedTime);
-    }
+    },
 
 }
 $(app.init);

@@ -10,16 +10,16 @@
 .working-day{
     background-color:lightgray;
     text-align: center;    
-    border: solid;
+	display: grid;
 }
 .legende{
     text-align: center;
-    border: solid 1px;
+	border: solid 1px;
 }
 .planning-legende{
     display: grid;
     grid-column-gap: 0.2rem;
-    grid-auto-rows: minmax(2rem, auto);
+	grid-auto-rows: minmax(2rem, auto);
 }
 .planning{
     background-color: rgb(236, 234, 234);
@@ -31,10 +31,6 @@
 	border-top: solid 1px;
 	text-align: left;
 }
-.planning :last-child{
-    background-color: white;
-}
-
 #fade { /*--Masque opaque noir de fond--*/
 	display: none; /*--masqué par défaut--*/
 	background: #000;
