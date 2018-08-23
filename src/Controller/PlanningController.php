@@ -62,48 +62,64 @@ class PlanningController extends Controller
     /**
      * @Route("/{id}", name="planning_show", methods="GET")
      */
-    public function show(Planning $planning): Response
+    public function show(Planning $planning, SerializerInterface $serializer): Response
     {
-        return $this->render('planning/show.html.twig', [
-            'planning' => $planning,
-            'page_title' => 'Planning semaine n° '
-            ]);
+        $data = [
+            "employee" => $planning->getEmployee()->getId(),
+            "starttime" => $planning->getStartTime()->format("H:i"),
+            "stoptime" => $planning->getStopTime()->format("H:i"),
+            "date" => $planning->getDayDate()->format("d/m/Y"),
+            "day" => $planning->getDay()->getRepresentationNumber(),
+            "company" => $planning->getCompany()->getName(),
+        ];
+
+        $json = $serializer->serialize($data, 'json');
+
+        return new Response($json);
     }
 
     /**
-     * @Route("/{id}/edit", name="planning_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="planning_edit", methods="POST")
      */
-    public function edit(Request $request, Planning $planning): Response
+    public function edit(Request $request, Planning $planning, SerializerInterface $serializer, EmployeeRepository $employeeRepo, ConverterController $converter)
     {
-        $form = $this->createForm(PlanningType::class, $planning);
-        $form->handleRequest($request);
+        $datas = $request->request->all();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        $startTime = new \DateTime($datas['planning']['startTime']);
+        $stopTime = new \DateTime($datas['planning']['stopTime']);
+        $employee = $employeeRepo->findOneById($datas['planning']['employee']);
 
-            return $this->redirectToRoute(
-                'planning_edit', ['id' => $planning->getId()]);
-        }
+        $planning->setEmployee($employee);
+        $planning->setStartTime($startTime);
+        $planning->setStopTime($stopTime);
+        $planning->setConvertedStartTime($converter);
+        $planning->setConvertedStopTime($converter);
+        $planning->setWorkTime();
 
-        return $this->render('planning/edit.html.twig', [
-            'planning' => $planning,
-            'form' => $form->createView(),
-            'page_title' => 'Planning semaine n° '
-        ]);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $json = $serializer->serialize($datas, 'json');
+        return new Response($json);
+
     }
 
     /**
      * @Route("/{id}", name="planning_delete", methods="DELETE")
      */
-    public function delete(Request $request, Planning $planning): Response
+    public function delete(Request $request, Planning $planning, SerializerInterface $serializer)
     {
-        if ($this->isCsrfTokenValid('delete'.$planning->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($planning);
-            $em->flush();
-        }
 
-        return $this->redirectToRoute('planning_index');
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($planning);
+        $em->flush();
+
+        $response = [
+            "success" => true,
+        ];
+
+        $json = $serializer->serialize($response, 'json');
+        return new Response($json); 
     }
 
     /**

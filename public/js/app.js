@@ -1,6 +1,7 @@
 var app = {
     init: function(){
-   
+
+        // pop up creation
         $('a.poplight').on('click', function() {
             var popID = $(this).data('rel'); 
             var popWidth = $(this).data('width');
@@ -26,19 +27,26 @@ var app = {
             return false;
         });
         
-        
+        //make a cancel button for pop up
         $('#cancel-btn').on('click', function() { 
             $('#fade , .popup_block').fadeOut(function() {
                 $('#fade, a.close').remove();  
-        });
-            
+        });           
             return false;
         });
 
-        /* make last hour line white */
+        $('#cancel-edition-btn').on('click', function() { 
+            $('#fade , .popup_block').fadeOut(function() {
+                $('#fade, a.close').remove();  
+        }); 
+            return false;
+        });
+
+        // make last hour line white
         var hours = $('.hour');
         $(hours[hours.length - 1]).css({'background-color' : 'white'})
 
+        //creation planning form handleling
         $('#planning-form').on('submit', function () {
 
             var dayDate = $('#planning_date').val();
@@ -81,14 +89,98 @@ var app = {
                 return false;
             });
 
+        //appearance of planning edit form    
+        $('.planning-employee').on('click', app.listener);
+
+        //creation planning edit form handleling
+        $('#planning-edit-form').on('submit', function () {
+
+            var employee = $('#planning-edition_employee').val();
+            var startTime = $('#planning-edition_startTime').val();
+            var stopTime = $('#planning-edition_stopTime').val();
+            var day = $('#planning-edition_day').val();
+            var id = $('#popup-edition-form').data('planning-id');
+
+            var data = {
+                "employee": employee,
+                "startTime": startTime,
+                "stopTime": stopTime,
+                "day": day,
+            }
+
+            console.log(data);
+            
+
+            //ajax call     
+            $.ajax({
+                method: $(this).attr('method'),
+                url: "planning/"+ id +"/edit",
+                data: $(this).serializeArray(),
+            }).done( function(){
+                container = $('#' + id).parent().attr('id');
+                //we remove the ancient planning
+                $('#' + id).remove();
+
+                if ($('#' + container + ' .planning-employee').length == 1){
+                    var planning = $('#' + container + ' .planning-employee')[0];
+                    var style = $(planning).attr('style');
+                    console.log(style);
+                    $(planning).attr('style', style + 'grid-column: 1;');
+                };
+                //we replace by the modified planning
+                app.createPlanning(data, id);
+                $('#fade , .popup_block').fadeOut(function() {
+                    $('#fade').remove();  
+                });
+            }).fail(function(textmsg,errorThrown){
+                console.log(textmsg);
+                console.log(errorThrown);
+            });
+            return false;
+        });
+
+        $('#planning-delet-btn').on('click', function() { 
+
+            var id = $('#popup-edition-form').data('planning-id');
+
+            $.ajax({
+                method: 'DELETE',
+                url: "planning/" + id,
+            }).done( function(){
+                
+                container = $('#' + id).parent().attr('id');
+
+                $('#' + id).remove();
+
+                if ($('#' + container + ' .planning-employee').length == 1){
+                    var planning = $('#' + container + ' .planning-employee')[0];
+                    var style = $(planning).attr('style');
+                    console.log(style);
+                    $(planning).attr('style', style + 'grid-column: 1;');
+                };
+
+                $('#fade , .popup_block').fadeOut(function() {
+                    $('#fade').remove();  
+                });
+            }).fail(function(textmsg,errorThrown){
+                console.log(textmsg);
+                console.log(errorThrown);
+            });
+            return false;
+        });
+
     },
 
+    //DOM manipulation for show plannings
     createPlanning: function(data, id){
         var id = id;
         var startTime = app.transformTime(data['startTime']);
         var stopTime = app.transformTime(data['stopTime']);
         var workTime = stopTime - startTime;
+        var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
 
+        //worktime modification
+        $('#' + data['employee'] + 'worktime').text(actualEmployeeWorktime - workTime);
         
         var employeeFName = $('#planning_employee option[value="'+ data['employee'] +'"]').text();
         
@@ -102,9 +194,12 @@ var app = {
             var start = (startTime - $('#' + data['day'] + 'afternoon').data('secondtimestart')) * 4 + 1;
             var planningStopTime = start + workTime * 4;
             
-            var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
             
             $("#" + data['day'] + 'afternoon').append(div);
+
+            //listener application on new dom element 
+            $('#' + id).on('click', app.listener);
 
         }else{
             
@@ -115,15 +210,19 @@ var app = {
             var start = (startTime - $('#' + data['day'] + 'morning').data('firsttimestart')) * 4 + 1;
             var planningStopTime = start + workTime * 4;
 
-            var div = '<div class="employee'+ data['employee'] +'" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
 
             $("#" + data['day'] + 'morning').append(div);
+
+            //listener application on new dom element 
+            $('#' + id).on('click', app.listener);
 
         }
 
 
     },
 
+    //convert time base 60 on base 100
     transformTime: function(time) {
 
         var splitedTime = time.split(":");
@@ -137,6 +236,44 @@ var app = {
         convertedTime = splitedTime[0] +'.'+ convertedMinuntes;
 
         return parseFloat(convertedTime);
+    },
+
+    listener: function(){
+        var popID = "popup-edition-form"; 
+        var popWidth = 500;     
+
+
+        $('#' + popID).fadeIn().css({ 'width': popWidth});
+        
+        var popMargTop = ($('#' + popID).height() + 80) / 2;
+        var popMargLeft = ($('#' + popID).width() + 80) / 2;
+        
+        
+        $('#' + popID).css({ 
+            'margin-top' : -popMargTop,
+            'margin-left' : -popMargLeft
+        });
+        
+        $('body').append('<div id="fade"></div>');
+        $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+
+        //ajax call
+
+        id = $(this).attr('id');
+
+        $('#popup-edition-form').data('planning-id', id);
+
+        $.getJSON("planning/" + id, function(data){
+            
+            $('#edition_daydate').text(data['date']);
+            $('#planning-edition_employee option[value="' + data['employee'] + '"]').attr('selected', 'selected');
+            $('#planning-edition_startTime').val(data["starttime"]);
+            $('#planning-edition_stopTime').val(data["stoptime"]);
+            $('#planning-edition_day').val(data["day"]);
+
+        });
+        
+        return false;
     },
 
 }

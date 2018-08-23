@@ -67,8 +67,12 @@
 
     <form action="/home" method="POST">
         <select name="company" id="company">
-            {% for company in app.user.companies %}
-            <option value="{{company.id}}">{{company.name}}</option>
+            {% for comp in app.user.companies %}
+            <option value="{{comp.id}}" 
+            {% if comp == company %}
+                selected
+            {% endif %}
+             >{{comp.name}}</option>
             {% endfor %}
         </select>
         <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
@@ -81,8 +85,12 @@
     </ul>
     <ul id="employee-list" class="d-flex flex-raw justify-content-around">
         {% for employee in company.employees %}
+            {% set workTimeLeft = employee.numberOfHours %}
+            {% for planning in employee.plannings %}
+                {% set workTimeLeft = workTimeLeft - planning.workTime %}
+            {% endfor %}
             <li class="employee"><span class="employee{{employee.id}}
-                employee-color"></span><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}}</a></li>
+                employee-color"></span><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}} : <span id="{{employee.id}}worktime">{{workTimeLeft}}</span>h</a></li>
         {% endfor %}
     </ul>
     <div class="planning-legende">
@@ -90,7 +98,7 @@
         <div></div>
         {% for schedule in company.schedules %}
             {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-            <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup1" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
+            <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup-creation-form" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
 
             {% set position = position + 1 %}
             {% endif %}
@@ -125,7 +133,7 @@
                     {% for planning in dayPlanningMorning %}
                     {% set start = (planning.convertedStartTime - schedule.convertedFirstTimeStart) * 4  + 1 %}
                     
-                    <div class="employee{{planning.employee.id}}" id="{{planning.id}}" data-column="{{columnMorning}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
+                    <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnMorning}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
                         {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
                     </div>
                     {% set columnMorning = columnMorning + 1 %}
@@ -143,7 +151,7 @@
                         {% for planning in dayPlanningAfternoon %}
                         {% set startAfternoon = (planning.convertedStartTime - schedule.convertedSecondTimeStart) * 4 + 1 %}
                         
-                        <div class="employee{{planning.employee.id}}" id="{{planning.id}}" data-column="{{columnAfternoon}}" style="grid-column:{{columnAfternoon}}; grid-row: {{startAfternoon}}/{{planning.workTime * 4 + startAfternoon}};">
+                        <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnAfternoon}}" style="grid-column:{{columnAfternoon}}; grid-row: {{startAfternoon}}/{{planning.workTime * 4 + startAfternoon}};">
                             {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
                         </div>
                         
@@ -171,7 +179,7 @@
     
 </div>
 
-<div id="popup1" class="popup_block">
+<div id="popup-creation-form" class="popup_block">
     <form name="planning" method="POST" action="{{ path('planning_new') }}" id="planning-form">
         <div id="planning">
             <div>
@@ -180,36 +188,69 @@
                     <option value="1">Lundi</option><option value="2">Mardi</option><option value="3">Mercredi</option><option value="4">Jeudi</option><option value="5">Vendredi</option><option value="6">Samedi</option><option value="7">Dimanche</option>
                 </select>
             </div>
+            <label class="required">Date du jour</label>
+            <div id="planning_dayDate">
+                <input id="planning_date" type="date" name="planning[date]" value="">
+            </div>
             <div>
-                <label class="required">Date du jour</label>
-                <div id="planning_dayDate">
-                    <input id="planning_date" type="date" name="planning[date]" value="">
-                </div>
-                <div>
-                    <span for="planning_company" class="required">Entreprise : {{company.name}}</span>
-                    <input type="hidden" id="planning_company" name="planning[company]" value="{{company.id}}">
-                </div>
-                <div>
-                    <label for="planning_employee" class="required">Employé(e)</label>
-                    <select id="planning_employee" name="planning[employee]">
-                        {% for employee in company.employees %}
-                        <option value="{{employee.id}}">{{employee.firstName}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label class="required">Heure de debut</label>
-                    <input id="planning_startTime" type="time" name="planning[startTime]">
-                </div>
-                <div>
-                    <label class="required">Heure de fin</label>
-                    <input id="planning_stopTime" type="time" name="planning[stopTime]">
-                </div>
-                <input id="planning_week" type="hidden" name="planning[week]" value="{{"now"|date("W")}}">
-                <input id="planning_year" type="hidden" name="planning[year]" value="{{"now"|date("o")}}">
-                
-                <button class="btn" id="save-btn">Confirmer</button> <Button class="btn" id="cancel-btn">Anuler</Button>
-            </form>
+                <span for="planning_company" class="required">Entreprise : {{company.name}}</span>
+                <input type="hidden" id="planning_company" name="planning[company]" value="{{company.id}}">
+            </div>
+            <div>
+                <label for="planning_employee" class="required">Employé(e)</label>
+                <select id="planning_employee" name="planning[employee]">
+                    {% for employee in company.employees %}
+                    <option value="{{employee.id}}">{{employee.firstName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="required">Heure de debut</label>
+                <input id="planning_startTime" type="time" name="planning[startTime]">
+            </div>
+            <div>
+                <label class="required">Heure de fin</label>
+                <input id="planning_stopTime" type="time" name="planning[stopTime]">
+            </div>
+            <input id="planning_week" type="hidden" name="planning[week]" value="{{"now"|date("W")}}">
+            <input id="planning_year" type="hidden" name="planning[year]" value="{{"now"|date("o")}}">
+            
+            <button class="btn" id="save-btn">Confirmer</button> <Button class="btn" id="cancel-btn">Anuler</Button>
         </div>
-        {% endblock %}
+    </form>
+</div>
+<div id="popup-edition-form" data-planning-id="" class="popup_block">
+    <form name="planning" method="POST" id="planning-edit-form">
+        <div id="planning-edition">
+            <input id="planning-edition_day" type="hidden" name="planning[day]" value="">
+            <div id="planning-edition_dayDate">
+                <span>Date du jour : <span id="edition_daydate"></span></span>
+            </div>
+            <div>
+                <span for="planning-edition_company" class="required">Entreprise : {{company.name}}</span>
+                <input type="hidden" id="planning-edition_company" name="planning[company]" value="{{company.id}}">
+            </div>
+            <div>
+                <label for="planning-edition_employee" class="required">Employé(e)</label>
+                <select id="planning-edition_employee" name="planning[employee]">
+                    {% for employee in company.employees %}
+                    <option value="{{employee.id}}">{{employee.firstName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="required">Heure de debut</label>
+                <input id="planning-edition_startTime" type="time" name="planning[startTime]">
+            </div>
+            <div>
+                <label class="required">Heure de fin</label>
+                <input id="planning-edition_stopTime" type="time" name="planning[stopTime]">
+            </div>
+            <button class="btn btn-success" id="planning-edition-btn">Confirmer</button>
+            <button class="btn btn-danger" id="planning-delet-btn">Supprimer</button>
+            <button class="btn" id="cancel-edition-btn">Anuler</Button>
+        </div>
+    </form>
+</div>
+{% endblock %}
         

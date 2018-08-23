@@ -6,6 +6,8 @@ use App\Entity\Planning;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 class PlanningType extends AbstractType
 {
@@ -13,11 +15,10 @@ class PlanningType extends AbstractType
     {
         $builder
             ->add('day')
-            ->add('dayDate')
-            ->add('company')
+            ->add('dayDate', DateType::class)
             ->add('employee')
-            ->add('startTime')
-            ->add('stopTime')
+            ->add('startTime', TimeType::class)
+            ->add('stopTime', TimeType::class)
         ;
     }
 

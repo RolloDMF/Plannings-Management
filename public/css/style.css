@@ -58,10 +58,6 @@
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 }
-img.btn_close {
-	float: right;
-	margin: -55px -55px 0 0;
-}
 #employee-list{
 	list-style: none;
 }
