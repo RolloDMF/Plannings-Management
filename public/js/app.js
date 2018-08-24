@@ -26,19 +26,48 @@ var app = {
             
             return false;
         });
+
+        //pop up for change planning
+        $('#new-planning-company').on('click', function() {
+            var popID = 'popup-new-planning-company-form'; 
+            var popWidth = 500;       
+
+            $('#' + popID).fadeIn().css({ 'width': popWidth});
+            
+            var popMargTop = ($('#' + popID).height() + 80) / 2;
+            var popMargLeft = ($('#' + popID).width() + 80) / 2;
+            
+            
+            $('#' + popID).css({ 
+                'margin-top' : -popMargTop,
+                'margin-left' : -popMargLeft
+            });
+            
+            $('body').append('<div id="fade"></div>');
+            $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+            
+            return false;
+        });
         
         //make a cancel button for pop up
         $('#cancel-btn').on('click', function() { 
             $('#fade , .popup_block').fadeOut(function() {
-                $('#fade, a.close').remove();  
+                $('#fade').remove();  
         });           
             return false;
         });
 
-        $('#cancel-edition-btn').on('click', function() { 
+        $('#cancel-edit-btn').on('click', function() { 
             $('#fade , .popup_block').fadeOut(function() {
-                $('#fade, a.close').remove();  
-        }); 
+                $('#fade').remove();  
+        });           
+            return false;
+        });
+
+        $('#cancel-new-company-planning-btn').on('click', function() { 
+            $('#fade , .popup_block').fadeOut(function() {
+                $('#fade').remove();  
+        });           
             return false;
         });
 
@@ -108,13 +137,29 @@ var app = {
                 "day": day,
             }
 
-            console.log(data);
-            
+            jQuery.getJSON( '/planning/'+ id, function(data) {
+                
+                //worktime RAZ
+                var startTime = app.transformTime(data['starttime']);
+                var stopTime = app.transformTime(data['stoptime']);
+                var workTime = stopTime - startTime;
+                
+                var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
 
+                $('#' + data['employee'] + 'worktime').text(parseFloat(actualEmployeeWorktime) + parseFloat(workTime));
+
+                if ((parseFloat(actualEmployeeWorktime) + parseFloat(workTime)) < 0 ) {
+                    $('#' + data['employee'] + 'worktime').addClass('negativ');
+                }else{
+                    $('#' + data['employee'] + 'worktime').removeClass('negativ');
+                };
+          
+            });
+            
             //ajax call     
             $.ajax({
                 method: $(this).attr('method'),
-                url: "planning/"+ id +"/edit",
+                url: "/planning/"+ id +"/edit",
                 data: $(this).serializeArray(),
             }).done( function(){
                 container = $('#' + id).parent().attr('id');
@@ -124,7 +169,6 @@ var app = {
                 if ($('#' + container + ' .planning-employee').length == 1){
                     var planning = $('#' + container + ' .planning-employee')[0];
                     var style = $(planning).attr('style');
-                    console.log(style);
                     $(planning).attr('style', style + 'grid-column: 1;');
                 };
                 //we replace by the modified planning
@@ -142,10 +186,41 @@ var app = {
         $('#planning-delet-btn').on('click', function() { 
 
             var id = $('#popup-edition-form').data('planning-id');
+            var employee = $('#planning-edition_employee').val();
+            var startTime = $('#planning-edition_startTime').val();
+            var stopTime = $('#planning-edition_stopTime').val();
+            var day = $('#planning-edition_day').val();
+            var id = $('#popup-edition-form').data('planning-id');
+
+            var data = {
+                "employee": employee,
+                "startTime": startTime,
+                "stopTime": stopTime,
+                "day": day,
+            }
+
+            jQuery.getJSON( '/planning/'+ id, function(data) {
+                
+                //worktime RAZ
+                var startTime = app.transformTime(data['starttime']);
+                var stopTime = app.transformTime(data['stoptime']);
+                var workTime = stopTime - startTime;
+                
+                var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
+
+                $('#' + data['employee'] + 'worktime').text(parseFloat(actualEmployeeWorktime) + parseFloat(workTime));
+
+                if ((parseFloat(actualEmployeeWorktime) + parseFloat(workTime)) < 0 ) {
+                    $('#' + data['employee'] + 'worktime').addClass('negativ');
+                }else{
+                    $('#' + data['employee'] + 'worktime').removeClass('negativ');
+                };
+          
+            });
 
             $.ajax({
                 method: 'DELETE',
-                url: "planning/" + id,
+                url: "/planning/" + id,
             }).done( function(){
                 
                 container = $('#' + id).parent().attr('id');
@@ -155,7 +230,6 @@ var app = {
                 if ($('#' + container + ' .planning-employee').length == 1){
                     var planning = $('#' + container + ' .planning-employee')[0];
                     var style = $(planning).attr('style');
-                    console.log(style);
                     $(planning).attr('style', style + 'grid-column: 1;');
                 };
 
@@ -181,6 +255,12 @@ var app = {
 
         //worktime modification
         $('#' + data['employee'] + 'worktime').text(actualEmployeeWorktime - workTime);
+
+        if ((actualEmployeeWorktime - workTime) < 0 ) {
+            $('#' + data['employee'] + 'worktime').addClass('negativ');
+        }else{
+            $('#' + data['employee'] + 'worktime').removeClass('negativ');
+        };
         
         var employeeFName = $('#planning_employee option[value="'+ data['employee'] +'"]').text();
         
@@ -263,7 +343,7 @@ var app = {
 
         $('#popup-edition-form').data('planning-id', id);
 
-        $.getJSON("planning/" + id, function(data){
+        $.getJSON("/planning/" + id, function(data){
             
             $('#edition_daydate').text(data['date']);
             $('#planning-edition_employee option[value="' + data['employee'] + '"]').attr('selected', 'selected');

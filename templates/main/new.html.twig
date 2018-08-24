@@ -6,9 +6,6 @@
 
 {% include 'nav.html.twig' %}
 
-{% set week = "now"|date("W") %}
-{% set year = "now"|date("Y") %}
-
 {% set minOpenSchedule  = minSchedule.convertedFirstTimeStart %}
 {% if maxSchedule.convertedSecondTimeStop != null %}
     {% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
@@ -65,10 +62,10 @@
 </style>
 
 <div class="container">
-    <h1>Semaine en cours</h1>
-    <span>N°{{"now"|date("W")}} du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
+    <h1>Semaine N°{{week}}</h1>
+    <span>du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
 
-    <form action="/home" method="POST">
+    <form action="" method="POST">
         <select name="company" id="company">
             {% for comp in app.user.companies %}
             <option value="{{comp.id}}" 
@@ -78,13 +75,15 @@
              >{{comp.name}}</option>
             {% endfor %}
         </select>
+        <input type="hidden" name="year" value="{{year}}">
+        <input type="hidden" name="week" value="{{week}}">
         <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
         <button class="btn" type="submit">Changer d'entreprise</button>
     </form>
     
     <ul id="option-list" class="d-flex flex-raw justify-content-around">
         <li>
-            <form action="{{path("company_planning")}}" method="POST">
+            <form action="" method="POST">
                 {% if week == 1 %}
                     {% set week = 53 %}
                     {% set year = year - 1 %}
@@ -98,7 +97,7 @@
         <li><button class="btn" id="new-planning-company">Choisir sa semaine</button></li>
         <li><a href=""><button class="btn">Envoyer le planning</button></a></li>
         <li>
-            <form action="{{path("company_planning")}}" method="POST">
+            <form action="" method="POST">
                 {% if week >= 52 %}
                     {% set week = week - 52 %}
                     {% set year = year + 1 %}
@@ -246,8 +245,8 @@
                     <label class="required">Heure de fin</label>
                     <input id="planning_stopTime" type="time" name="planning[stopTime]">
                 </div>
-                <input id="planning_week" type="hidden" name="planning[week]" value="{{"now"|date("W")}}">
-                <input id="planning_year" type="hidden" name="planning[year]" value="{{"now"|date("o")}}">
+                <input id="planning_week" type="hidden" name="planning[week]" value="{{week}}">
+                <input id="planning_year" type="hidden" name="planning[year]" value="{{year}}">
                 
                 <button class="btn btn btn-success" id="save-btn">Confirmer</button> <Button class="btn cancel-btn" id="cancel-btn">Anuler</Button>
             </div>
@@ -310,4 +309,3 @@
         </form>
     </div>
 {% endblock %}
-        

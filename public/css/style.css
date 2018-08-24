@@ -66,3 +66,9 @@
 	width: 1rem;
 	height: 1rem;
 }
+.negativ{
+	color: red;
+}
+/* .planning-employee{
+	writing-mode:vertical-rl; // vertical text
+} */

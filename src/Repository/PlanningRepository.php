@@ -79,4 +79,20 @@ class PlanningRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findByCompanyYearWeek($company, $year, $week)
+    {
+
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.week = :week')
+            ->andWhere('p.year = :year')
+            ->andWhere('p.company = :company')
+            ->setParameter('week', $week)
+            ->setParameter('year', $year)
+            ->setParameter('company', $company)
+            ->orderBy('p.day')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

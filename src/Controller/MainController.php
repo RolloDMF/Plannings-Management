@@ -30,6 +30,10 @@ class MainController extends Controller
      */
     public function home(Request $request, CompanyRepository $companyRepo, ConverterController $converter, ScheduleRepository $schedulRepo, PlanningRepository $planningRepo)
     {
+        if ($this->getUser() == null) {
+            return $this->render('main/index.html.twig');
+        };
+
         $companyId = $request->request->all();
 
         
@@ -59,6 +63,47 @@ class MainController extends Controller
                 'maxSchedule' => $maxCloseSchedule,
                 'daysDates' => $daysdates,
                 'plannings' => $plannings,
+                'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
+        ]);
+    }        
+        
+    /**
+     * @Route("/company/planning", name="company_planning", methods="GET|POST")
+     */
+    public function companyPlanning(Request $request, CompanyRepository $companyRepo, ConverterController $converter, ScheduleRepository $schedulRepo, PlanningRepository $planningRepo)
+    {
+        if ($this->getUser() == null) {
+            return $this->render('main/index.html.twig');
+        };
+        
+        $param = $request->request->all();
+
+        $companyId = $param['company'];
+        $year = $param['year'];
+        $week = $param['week'];  
+
+        $company = $companyRepo->findOneById($companyId);
+        $schedules = $schedulRepo->findByCompany($company);
+
+        $minOpenSchedule = $schedulRepo->findMinSchedule($company);
+        $maxCloseSchedule = $schedulRepo->findMaxSchedule($company);
+
+        $daysdates = [];
+        
+        foreach ($schedules as $schedule) {
+            $daysdates[] = DateWithYWD::dateWithYearWeek($schedule->getDay()->getrepresentationNumber(), $year, $week);
+        }
+
+        $plannings = $planningRepo->findByCompanyYearWeek($company, $year, $week);
+
+            return $this->render('main/new.html.twig', [
+                'company' => $company,
+                'minSchedule' => $minOpenSchedule,
+                'maxSchedule' => $maxCloseSchedule,
+                'daysDates' => $daysdates,
+                'plannings' => $plannings,
+                'year' => $year,
+                'week' => $week,
                 'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
     }        

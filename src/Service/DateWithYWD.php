@@ -22,4 +22,17 @@ class DateWithYWD extends Controller
         
         return $date;
     }
+
+    public static function dateWithYearWeek($dayNumber, $year, $week)
+    {
+        $dayNumber -= 1;
+        $dateDay = new \DateTime();
+
+        $date = $dateDay->setISOdate($year, $week);
+        $dateDay->modify('+' . $dayNumber . 'day' );
+        
+        return $date;
+    }
+
+
 }
