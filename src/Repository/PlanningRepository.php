@@ -74,7 +74,7 @@ class PlanningRepository extends ServiceEntityRepository
             ->setParameter('week', $week->format('W'))
             ->setParameter('year', $year->format('Y'))
             ->setParameter('company', $company)
-            ->orderBy('p.day')
+            ->orderBy('p.employee')
             ->getQuery()
             ->getResult()
         ;

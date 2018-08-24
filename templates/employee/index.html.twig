@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Employee index{% endblock %}
+{% block title %}Liste des employés{% endblock %}
 
 {% block body %}
 {% include 'nav.html.twig' %}
@@ -9,36 +9,36 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>FirstName</th>
-                <th>LastName</th>
+                <th>Entreprise</th>
+                <th>Prénom</th>
+                <th>Nom</th>
                 <th>Email</th>
-                <th>NumberOfHours</th>
-                <th>RemainingLeave</th>
+                <th>Nombre d'heures</th>
+                <th>Congés restant</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for employee in employees %}
             <tr>
-                <td>{{ employee.id }}</td>
+                <td>{{ employee.company.name }}</td>
                 <td>{{ employee.firstName }}</td>
                 <td>{{ employee.lastName }}</td>
                 <td>{{ employee.email }}</td>
                 <td>{{ employee.numberOfHours }}</td>
                 <td>{{ employee.remainingLeave }}</td>
                 <td>
-                    <a href="{{ path('employee_show', {'id': employee.id}) }}">show</a>
-                    <a href="{{ path('employee_edit', {'id': employee.id}) }}">edit</a>
+                    <a href="{{ path('employee_show', {'id': employee.id}) }}">Voir</a>
+                    <a href="{{ path('employee_edit', {'id': employee.id}) }}">Editer</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7">Pas d employé trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('employee_new') }}">Create new</a>
+    <a href="{{ path('employee_new') }}">Nouvel employé</a>
 {% endblock %}

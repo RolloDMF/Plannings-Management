@@ -47,4 +47,14 @@ class EmployeeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllOrderByCompany()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.company')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+  
 }

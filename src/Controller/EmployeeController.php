@@ -21,7 +21,7 @@ class EmployeeController extends Controller
     public function index(EmployeeRepository $employeeRepository): Response
     {
         return $this->render('employee/index.html.twig', [
-            'employees' => $employeeRepository->findAll(),
+            'employees' => $employeeRepository->findAllOrderByCompany(),
             'page_title' => 'Liste des employés'
             ]);
     }
