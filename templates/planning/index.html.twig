@@ -1,40 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Planning index{% endblock %}
+{% block title %}Mes plannings{% endblock %}
 
 {% block body %}
 {% include 'nav.html.twig' %}
-    <h1>Planning index</h1>
+    <div class="container">
+        <h1>Mes plannings</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>DayDate</th>
-                <th>StartTime</th>
-                <th>StopTime</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+        <form action="" method="POST">
+            <select name="company" id="company">
+                {% for comp in app.user.companies %}
+                <option value="{{comp.id}}" 
+                {% if comp == company %}
+                    selected
+                {% endif %}
+                 >{{comp.name}}</option>
+                {% endfor %}
+            </select>
+            <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
+            <button class="btn" type="submit">Changer d'entreprise</button>
+        </form>
+    
+        {% set year = 0 %}
+        {% set week =  0 %}
         {% for planning in plannings %}
-            <tr>
-                <td>{{ planning.id }}</td>
-                <td>{{ planning.dayDate ? planning.dayDate|date('Y-m-d') : '' }}</td>
-                <td>{{ planning.startTime ? planning.startTime|date('H:i:s') : '' }}</td>
-                <td>{{ planning.stopTime ? planning.stopTime|date('H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('planning_show', {'id': planning.id}) }}">show</a>
-                    <a href="{{ path('planning_edit', {'id': planning.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+            {% if planning.week != week or planning.year != year %}
+                {% set year = planning.year %}
+                {% set week = planning.week %}
+                <div>
+                    <span>Semaine N° {{planning.week}} année : {{planning.year}} 
+                        <form class="d-inline" action="{{path("company_planning")}}" method="POST">
+                            <input type="hidden" name="week" value="{{planning.week}}">
+                            <input type="hidden" name="year" value="{{planning.year}}">
+                            <input type="hidden" name="company" value="{{planning.company.id}}">
+                            <button class="btn">Voir</button>
+                        </form>
+                        <form class="d-inline" action="{{path("company_planning")}}" method="POST">
+                            <input type="hidden" name="week" value="{{planning.week}}">
+                            <input type="hidden" name="year" value="{{planning.year}}">
+                            <input type="hidden" name="company" value="{{planning.company.id}}">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </span> 
+                </div>  
+            {% endif %}
         {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('planning_new') }}">Create new</a>
+    </div>
 {% endblock %}

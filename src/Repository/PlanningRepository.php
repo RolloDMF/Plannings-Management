@@ -95,4 +95,16 @@ class PlanningRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findAllOrdeByDaydate($company)
+    {
+
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.dayDate')
+            ->andWhere('p.company = :company')
+            ->setParameter('company', $company)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

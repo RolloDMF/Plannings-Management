@@ -23,12 +23,23 @@ use App\Entity\Company;
 class PlanningController extends Controller
 {
     /**
-     * @Route("/", name="planning_index", methods="GET")
+     * @Route("/", name="planning_index", methods="GET|POST")
      */
-    public function index(PlanningRepository $planningRepository): Response
+    public function index(Request $request, PlanningRepository $planningRepository, CompanyRepository $companyRepo)
     {
+        $companyId = $request->request->all();
+        
+        if ($companyId === []){
+            if ($this->getUser()->getCompanies()[0] === null) {
+                return $this->redirectToRoute('company_new');
+            }
+            $companyId = $this->getUser()->getCompanies()[0]->getId();
+        }
+        $company = $companyRepo->findOneById($companyId);
+
         return $this->render('planning/index.html.twig', [
-            'plannings' => $planningRepository->findAll(),
+            'plannings' => $planningRepository->findAllOrdeByDaydate($company),
+            'company' => $company,
             'page_title' => 'Liste des plannings'
             ]);
     }
