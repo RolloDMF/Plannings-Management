@@ -72,23 +72,36 @@ class ScheduleController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="schedule_edit", methods="GET|POST")
+     * @Route("/edit", name="schedule_edit", methods="GET|POST")
      */
-    public function edit(Request $request, Schedule $schedule): Response
+    public function edit(Request $request, ScheduleRepository $scheduleRepo, ConverterController $converter)
     {
-        $form = $this->createForm(ScheduleType::class, $schedule);
-        $form->handleRequest($request);
+        $companySchedules = $request->request->all();
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($companySchedules as $datas) {
+            
+            $schedule = $scheduleRepo->findOneById($datas['id']);
+            
+            $schedule->hydrate($datas, $converter);
+            
+            $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('schedule_edit', ['id' => $schedule->getId()]);
         }
 
+        return $this->redirectToRoute('company_index');
+    }
+
+    /**
+     * @Route("{id}/edit/form", name="schedule_edit_form", methods="GET|POST")
+     */
+    public function showEditForm(Company $company, ScheduleRepository $scheduleRepo)
+    {
+        $schedules = $scheduleRepo->findByCompany($company);
+
         return $this->render('schedule/edit.html.twig', [
-            'schedule' => $schedule,
-            'form' => $form->createView(),
-            'page_title' => 'Edition Horraire de l entreprise '. $schedule->getCompany()->getName()
+            'schedules' => $schedules,
+            'page_title' => 'Edition Horraire de l entreprise '. $company->getName()
         ]);
     }
 

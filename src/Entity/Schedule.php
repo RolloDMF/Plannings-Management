@@ -165,6 +165,7 @@ class Schedule
     {
         if ($datas['firstTimeStart'] === "") {
             $time1 = null;
+            $this->setConvertedFirstTimeStart(null);
         }else{     
             $time1 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStart']));
             $this->setConvertedFirstTimeStart($converter->convertTime($time1));
@@ -172,6 +173,8 @@ class Schedule
 
         if ($datas['firstTimeStop'] === "") {
             $time2 = null;
+            $this->setConvertedFirstTimeStop(null);
+            $this->setMorningWorkTime(null);
         }else{
             $time2 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStop']));
             $this->setConvertedFirstTimeStop($converter->convertTime($time2));
@@ -181,6 +184,8 @@ class Schedule
 
         if ($datas['secondTimeStart'] === "") {
             $time3 = null;
+            $this->setConvertedSecondTimeStart(null);
+            $this->setMealBreak(null);
         }else{
             $time3 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStart']));
             $this->setConvertedSecondTimeStart($converter->convertTime($time3));
@@ -190,6 +195,8 @@ class Schedule
 
         if ($datas['secondTimeStop'] === "") {
             $time4 = null;
+            $this->setConvertedSecondTimeStop(null);
+            $this->setAfternoonWorkTime(null);
         }else{
             $time4 = \DateTime::createFromFormat('G:i', ($datas['secondTimeStop']));
             $this->setConvertedSecondTimeStop($converter->convertTime($time4));
