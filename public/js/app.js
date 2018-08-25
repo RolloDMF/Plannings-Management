@@ -248,8 +248,10 @@ var app = {
     //DOM manipulation for show plannings
     createPlanning: function(data, id){
         var id = id;
-        var startTime = app.transformTime(data['startTime']);
-        var stopTime = app.transformTime(data['stopTime']);
+        var roundStartTime = app.round(data['startTime']);
+        var roundStopTime = app.round(data['stopTime']);
+        var startTime = app.transformTime(roundStartTime);
+        var stopTime = app.transformTime(roundStopTime);
         var workTime = stopTime - startTime;
         var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
 
@@ -274,7 +276,7 @@ var app = {
             var start = (startTime - $('#' + data['day'] + 'afternoon').data('secondtimestart')) * 4 + 1;
             var planningStopTime = start + workTime * 4;
             
-            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + roundStartTime +  'h-'+ roundStopTime + 'h</div>';
             
             $("#" + data['day'] + 'afternoon').append(div);
 
@@ -290,7 +292,7 @@ var app = {
             var start = (startTime - $('#' + data['day'] + 'morning').data('firsttimestart')) * 4 + 1;
             var planningStopTime = start + workTime * 4;
 
-            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + data['startTime'] +  'h-'+ data['stopTime'] + 'h</div>';
+            var div = '<div class="employee'+ data['employee'] +' planning-employee" id="'+ id +'" data-column="' + column + '" style="grid-column:' + column +'; grid-row: '+ start + '/' + planningStopTime +';">'+ employeeFName +' : ' + roundStartTime +  'h-'+ roundStopTime + 'h</div>';
 
             $("#" + data['day'] + 'morning').append(div);
 
@@ -355,6 +357,41 @@ var app = {
         
         return false;
     },
+
+    round: function(time) {
+        var splitedTime = time.split(":");
+
+        minutes = splitedTime[1];
+        hour = parseInt(splitedTime[0]);
+        //transform value on quarter of hour
+        switch (true) {
+            case (minutes >=  8 && minutes < 23):
+                minutes = 15;
+                return (hour + ":" + minutes);
+                break;
+
+            case (minutes >= 23 && minutes < 38):
+                minutes = 30;
+                return (hour + ":" + minutes);
+                break;
+
+            case (minutes >= 38 && minutes < 52):
+                minutes = 45;
+                return (hour + ":" + minutes);
+                break;
+
+            case (minutes >= 52 ):
+                minutes = 0;
+                hour += 1; 
+                return (hour + ":" + minutes + 0);
+                break;
+
+            default:
+                minutes = 0;
+                return (hour + ":" + minutes + 0);
+                break;
+        }
+    }
 
 }
 $(app.init);

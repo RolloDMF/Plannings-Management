@@ -108,7 +108,11 @@ class Schedule
 
     public function setFirstTimeStart($firstTimeStart): self
     {
-        $this->firstTimeStart = $firstTimeStart;
+        if ($firstTimeStart !== null) {
+            $this->firstTimeStart = ConverterController::roundTime($firstTimeStart);
+        }else{
+            $this->firstTimeStart = $firstTimeStart;
+        };
 
         return $this;
     }
@@ -120,7 +124,11 @@ class Schedule
 
     public function setFirstTimeStop($firstTimeStop): self
     {
-        $this->firstTimeStop = $firstTimeStop;
+        if ($firstTimeStop !== null) {
+            $this->firstTimeStop = ConverterController::roundTime($firstTimeStop);
+        }else{
+            $this->firstTimeStop = $firstTimeStop;
+        };
 
         return $this;
     }
@@ -132,7 +140,11 @@ class Schedule
 
     public function setSecondTimeStart($secondTimeStart): self
     {
-        $this->secondTimeStart = $secondTimeStart;
+        if ($secondTimeStart !== null) {
+            $this->secondTimeStart = ConverterController::roundTime($secondTimeStart);
+        }else{
+            $this->secondTimeStart = $secondTimeStart;
+        };
 
         return $this;
     }
@@ -144,7 +156,11 @@ class Schedule
 
     public function setSecondTimeStop($secondTimeStop): self
     {
-        $this->secondTimeStop = $secondTimeStop;
+        if ($secondTimeStop !== null) {
+            $this->secondTimeStop = ConverterController::roundTime($secondTimeStop);
+        }else{
+            $this->secondTimeStop = $secondTimeStop;
+        };
 
         return $this;
     }
@@ -165,6 +181,7 @@ class Schedule
     {
         if ($datas['firstTimeStart'] === "") {
             $time1 = null;
+            //set this parameter null in case of schedule edit
             $this->setConvertedFirstTimeStart(null);
         }else{     
             $time1 = \DateTime::createFromFormat('G:i', ($datas['firstTimeStart']));
@@ -173,6 +190,7 @@ class Schedule
 
         if ($datas['firstTimeStop'] === "") {
             $time2 = null;
+            //set this parameter null in case of schedule edit
             $this->setConvertedFirstTimeStop(null);
             $this->setMorningWorkTime(null);
         }else{
@@ -184,6 +202,7 @@ class Schedule
 
         if ($datas['secondTimeStart'] === "") {
             $time3 = null;
+            //set this parameter null in case of schedule edit
             $this->setConvertedSecondTimeStart(null);
             $this->setMealBreak(null);
         }else{
@@ -195,6 +214,7 @@ class Schedule
 
         if ($datas['secondTimeStop'] === "") {
             $time4 = null;
+            //set this parameter null in case of schedule edit
             $this->setConvertedSecondTimeStop(null);
             $this->setAfternoonWorkTime(null);
         }else{

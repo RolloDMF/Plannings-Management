@@ -89,4 +89,38 @@ class ConverterController extends Controller
                 break;
         }
     }
+
+    public static function roundTime($time)
+    {
+        $minutes = $time->format("i");
+        $hour = $time->format("G");
+        //transform value on quarter of hour
+        switch (true) {
+            case ($minutes >=  8 && $minutes < 23):
+                $minutes = 15;
+                return new \DateTime($hour . ":" . $minutes);
+                break;
+
+            case ($minutes >= 23 && $minutes < 38):
+                $minutes = 30;
+                return new \DateTime($hour . ":" . $minutes);
+                break;
+
+            case ($minutes >= 38 && $minutes < 52):
+                $minutes = 45;
+                return new \DateTime($hour . ":" . $minutes);
+                break;
+
+            case ($minutes >= 52 ):
+                $minutes = 0;
+                $hour += 1; 
+                return new \DateTime($hour . ":" . $minutes);
+                break;
+
+            default:
+                $minutes = 0;
+                return new \DateTime($hour . ":" . $minutes);
+                break;
+        }
+    }
 }

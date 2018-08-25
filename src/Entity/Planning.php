@@ -99,7 +99,11 @@ class Planning
 
     public function setStartTime(\DateTimeInterface $startTime): self
     {
-        $this->startTime = $startTime;
+        if ($startTime !== null) {
+            $this->startTime = ConverterController::roundTime($startTime);
+        }else{
+            $this->startTime = $startTime;
+        };
 
         return $this;
     }
@@ -111,7 +115,11 @@ class Planning
 
     public function setStopTime(\DateTimeInterface $stopTime): self
     {
-        $this->stopTime = $stopTime;
+        if ($stopTime !== null) {
+            $this->stopTime = ConverterController::roundTime($stopTime);
+        }else{
+            $this->stopTime = $stopTime;
+        };
 
         return $this;
     }
