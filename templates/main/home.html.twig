@@ -65,6 +65,7 @@
 </style>
 
 <div class="container">
+    <div> {{maxWorkTime}} {{shift}} {{endShift}} </div>
     <h1>Semaine en cours</h1>
     <span>N°{{"now"|date("W")}} du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
 
@@ -203,7 +204,14 @@
             {% endif %}
         {% endfor %}
 
+        <!-- time show management , half and quarter of hour -->
         {% set interval = 1 %}
+        {% if shift != 0 and endShift != 0 %}
+            {% set maxWorkTime = maxWorkTime + 2 %}
+        {% elseif shift != 0 or endShift != 0 %}
+            {% set maxWorkTime = maxWorkTime + 1 %}
+        {% endif %}
+        <!-- time show  -->
         {% for i in 0..(maxWorkTime / 4 + shift + endShift) %}
             <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}};">{{minSchedule.firstTimeStart|date("G") + i}}h</div>
             {% set interval = interval + 4 %}

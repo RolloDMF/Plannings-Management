@@ -202,6 +202,14 @@
             {% endif %}
         {% endfor %}
 
+        <!-- time show management , half and quarter of hour -->
+        {% set interval = 1 %}
+        {% if shift != 0 and endShift != 0 %}
+            {% set maxWorkTime = maxWorkTime + 2 %}
+        {% elseif shift != 0 or endShift != 0 %}
+            {% set maxWorkTime = maxWorkTime + 1 %}
+        {% endif %}
+        <!-- time show  -->
         {% set interval = 1 %}
         {% for i in 0..(maxWorkTime / 4 + shift + endShift) %}
             <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}};">{{minSchedule.firstTimeStart|date("G") + i}}h</div>

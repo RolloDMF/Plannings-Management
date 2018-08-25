@@ -53,6 +53,7 @@ class ScheduleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s');
         return $qb
             ->andWhere('s.company = :val')
+            //cheking if convertedFirstTimeStop is not null for avoid errors when the day have no schedule
             ->andWhere($qb->expr()->isNotNull('s.convertedFirstTimeStart'))
             ->setParameter('val', $company)
             ->orderBy('s.firstTimeStart', 'ASC')
@@ -67,6 +68,7 @@ class ScheduleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s');
         $maxFirtsTime = $qb
             ->andWhere('s.company = :val')
+            //cheking if convertedFirstTimeStop is not null for avoid errors when the day have no schedule
             ->andWhere($qb->expr()->isNotNull('s.convertedFirstTimeStop'))
             ->setParameter('val', $company)
             ->orderBy('s.firstTimeStop', 'DESC')
@@ -78,6 +80,7 @@ class ScheduleRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s');
         $maxSecondTime = $qb
             ->andWhere('s.company = :val')
+            //cheking if convertedFirstTimeStop is not null for avoid errors when the day have no schedule
             ->andWhere($qb->expr()->isNotNull('s.convertedSecondTimeStop'))
             ->setParameter('val', $company)
             ->orderBy('s.secondTimeStop', 'DESC')
@@ -86,7 +89,7 @@ class ScheduleRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
 
-        if ($maxFirtsTime > $maxSecondTime) {
+        if ($maxFirtsTime->getConvertedFirstTimeStop() > $maxSecondTime->getConvertedSecondTimeStop()) {
             return $maxFirtsTime;
         }else {
             return $maxSecondTime;
