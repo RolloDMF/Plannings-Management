@@ -65,7 +65,6 @@
 </style>
 
 <div class="container">
-    <div> {{maxWorkTime}} {{shift}} {{endShift}} </div>
     <h1>Semaine en cours</h1>
     <span>N°{{"now"|date("W")}} du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
 
@@ -161,7 +160,7 @@
                 {% endfor %}
                 
                 
-                <div id="{{schedule.day.representationNumber}}morning" class="working-day" data-firsttimestart="{{schedule.convertedFirstTimeStart}}" data-morning="{{schedule.convertedFirstTimeStop}}" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
+                <div id="{{schedule.day.representationNumber}}morning" class="working-day" data-firsttimestart="{{schedule.convertedFirstTimeStart}}" data-firsttimestop="{{schedule.convertedFirstTimeStop}}" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
 
                     {% set columnMorning = 1 %}
                     
@@ -179,7 +178,7 @@
                 {% if schedule.convertedSecondTimeStart != null %}
 
                 
-                <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" data-secondtimestart="{{schedule.convertedSecondTimeStart}}" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
+                <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" data-secondtimestart="{{schedule.convertedSecondTimeStart}}" data-secondtimestop="{{schedule.convertedSecondTimeStop}}" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
                     
                     {% set columnAfternoon = 1 %}
                     
