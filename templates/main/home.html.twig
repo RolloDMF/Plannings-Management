@@ -11,11 +11,11 @@
 
 {% set minOpenSchedule  = minSchedule.convertedFirstTimeStart %}
 {% if maxSchedule.convertedSecondTimeStop != null %}
-    {% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
-    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
+{% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
+{% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
 {% else %}
-    {% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
-    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
+{% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
+{% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
 {% endif %}
 
 <!-- we make a shift for none entier hour start and stop -->
@@ -28,9 +28,9 @@
 {% set lastDay = "" %}
 
 {% for schedule in company.schedules %}
-    {% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
-        {% set workDay = workDay + 1 %}
-    {% endif %}
+{% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
+{% set workDay = workDay + 1 %}
+{% endif %}
 {% endfor %}
 
 {% set maxWorkTime =  (maxCloseSchedule - minOpenSchedule) * 4 %}
@@ -43,43 +43,49 @@
     .planning-legende{
         grid-template-columns: 2rem repeat({{workDay}}, 1fr);
     }
-
+    
     {% for employee in company.employees %}
-        .employee{{employee.id}}{
-            background-color: {{employee.color}};
-            opacity: .8;
-            color: rgba(0, 0, 0, 1);
-        }
+    .employee{{employee.id}}{
+        background-color: {{employee.color}};
+        opacity: .8;
+        color: rgba(0, 0, 0, 1);
+    }
     {% endfor %}
-
+    
     {% for schedule in company.schedules %}
-        #{{schedule.day.representationNumber}}morning{
-            grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);
-        }
-        {% if schedule.convertedSecondTimeStart != null %}
-            #{{schedule.day.representationNumber}}afternoon{
-                grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);
-            }          
-        {% endif %}
+    #{{schedule.day.representationNumber}}morning{
+        grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);
+    }
+    {% if schedule.convertedSecondTimeStart != null %}
+    #{{schedule.day.representationNumber}}afternoon{
+        grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);
+    }          
+    {% endif %}
     {% endfor %}
 </style>
 
 <div class="container">
-    <h1>Semaine en cours</h1>
-    <span>N°{{"now"|date("W")}} du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
+    <div class="frame">
+        <h1>Semaine en cours</h1>
+        <span>N°{{"now"|date("W")}} du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
+    </div>
 
     <form action="/home" method="POST">
-        <select name="company" id="company">
-            {% for comp in app.user.companies %}
-            <option value="{{comp.id}}" 
-            {% if comp == company %}
+        <div class="input-group col-4 offset-4">
+            <div class="input-group-prepend">
+                <button class="btn btn-black" type="submit" title="Changer d'entreprise"><i class="fas fa-exchange-alt"></i></button>
+            </div>
+            <select class="custom-select" name="company" id="company">
+                {% for comp in app.user.companies %}
+                <option value="{{comp.id}}" 
+                {% if comp == company %}
                 selected
-            {% endif %}
-             >{{comp.name}}</option>
-            {% endfor %}
-        </select>
-        <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
-        <button class="btn" type="submit">Changer d'entreprise</button>
+                {% endif %}
+                >{{comp.name}}</option>
+                {% endfor %}
+            </select>
+            <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
+        </div>
     </form>
     
     <ul id="option-list" class="d-flex flex-raw justify-content-around">
@@ -92,11 +98,11 @@
                 <input type="hidden" name="week" value="{{week - 1}}">
                 <input type="hidden" name="year" value="{{year}}">
                 <input type="hidden" name="company" value="{{company.id}}">
-                <button type="submit" class="btn">Semaine précédente</button>
+                <button type="submit" class="btn btn-black" title="Semaine précédente"><i class="fas fa-angle-double-left"></i></button>
             </form>
         </li>
-        <li><button class="btn" id="new-planning-company">Choisir sa semaine</button></li>
-        <li><a href=""><button class="btn">Envoyer le planning</button></a></li>
+        <li><button class="btn btn-black" id="new-planning-company" title="Choisir sa semaine"><i class="far fa-calendar-alt"></i></button></li>
+        <li><a href=""><button class="btn btn-black" title="Envoyer le planning"><i class="far fa-envelope"></i></button></a></li>
         <li>
             <form action="{{path("company_planning")}}" method="POST">
                 {% if week >= 52 %}
@@ -106,7 +112,7 @@
                 <input type="hidden" name="week" value="{{week + 1}}">
                 <input type="hidden" name="year" value="{{year}}">
                 <input type="hidden" name="company" value="{{company.id}}">
-                <button type="submit" class="btn">Semaine suivante</button>
+                <button type="submit" class="btn btn-black" title="Semaine suivante"><i class="fas fa-angle-double-right"></i></button>
             </form>
         </li>
     </ul>
@@ -119,11 +125,15 @@
                 {% endif %}
             {% endfor %}
             <li class="employee"><span class="employee{{employee.id}}
-                employee-color"></span><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}} : 
+                 employee-frame"><a href="{{ path('employee_edit',{'id': employee.id}) }}" class="employee-link">{{employee.firstName}} :</a></span>
                     {% if  workTimeLeft < 0 %}
-                    <span id="{{employee.id}}worktime" class="negativ" >{{workTimeLeft}}</span>h</a></li>                
+                    <span class="frame">
+                        <span id="{{employee.id}}worktime" class="negativ" >{{workTimeLeft}}</span>h</li>
+                    </span>
                     {% else %}
-                    <span id="{{employee.id}}worktime" >{{workTimeLeft}}</span>h</a></li>
+                    <span class="frame">
+                        <span id="{{employee.id}}worktime">{{workTimeLeft}}</span>h</li>
+                    </span>
                     {% endif %}
         {% endfor %}
     </ul>

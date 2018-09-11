@@ -137,7 +137,7 @@ var app = {
 
         // make last hour line white
         var hours = $('.hour');
-        $(hours[hours.length - 1]).css({'background-color' : 'white'})
+        $(hours[hours.length - 1]).css({'background-color' : 'rgba(255,255,255,0.1)'})
 
         
         //creation planning form handleling

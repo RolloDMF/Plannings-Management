@@ -1,20 +1,33 @@
 .container{
 	text-align: center;
+	margin-top: 3%;
 }
-#nav-list{
-	list-style: none;
+#nav-list a{
+	color: white;
+}
+#nav{
+	background-color: #01161E;
+	color: #fff;
+}
+.navbar{
+	background-color: #01161E;
 }
 #option-list{
 	list-style: none;
+	margin-top: 2%;
 }
 .working-day{
-    background-color:lightgray;
+    background-color:white;
     text-align: center;    
 	display: grid;
 }
 .legende{
     text-align: center;
 	border: solid 1px;
+	background-color: #01161E;
+}
+.legende a{
+	color: white;
 }
 .planning-legende{
     display: grid;
@@ -22,10 +35,10 @@
 	grid-auto-rows: minmax(2rem, auto);
 }
 .planning{
-    background-color: rgb(236, 234, 234);
+    background-color: #EFEFF0;
     display: grid;
     grid-column-gap: 0.2rem;
-    z-index: 1
+	z-index: 1
 }
 .hour{
 	border-top: solid 1px;
@@ -60,15 +73,38 @@
 }
 #employee-list{
 	list-style: none;
-}
-.employee-color{
-	display: inline-block;
-	width: 1rem;
-	height: 1rem;
+	margin-bottom: 5%;
+	margin-top: 5%;
 }
 .negativ{
 	color: red;
 }
-/* .planning-employee{
-	writing-mode:vertical-rl; // vertical text
-} */
+body{
+	/* background-image: url('../images/planning.jpg');
+	background-attachment: fixed; */
+	background-color: #C1CAD6;
+}
+.tooltype{
+	background-color: aquamarine;
+}
+.frame{
+	background-color: #fff;
+	margin-bottom: 3%;
+	padding: 5%;
+	box-shadow: 5px 5px 5px #000;
+}
+li .frame{
+	margin: 3%;
+}
+.employee-frame{
+	padding: 5%;
+	box-shadow: 5px 5px 5px #000;
+	margin: 5%;
+}
+.employee-link{
+	color: #000;
+}
+.btn-black{
+	background-color: #01161E;
+	color: #DAE2DF;
+}
