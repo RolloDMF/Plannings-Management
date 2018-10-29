@@ -1,16 +1,16 @@
 .container{
 	text-align: center;
-	margin-top: 3%;
+	margin-top: 3rem;
 }
 #nav-list a{
 	color: white;
 }
 #nav{
-	background-color: #01161E;
+	background-color: #449DD1;
 	color: #fff;
 }
 .navbar{
-	background-color: #01161E;
+	background-color: #449DD1;
 }
 #option-list{
 	list-style: none;
@@ -24,7 +24,7 @@
 .legende{
     text-align: center;
 	border: solid 1px;
-	background-color: #01161E;
+	background-color: #449DD1;
 }
 .legende a{
 	color: white;
@@ -35,7 +35,7 @@
 	grid-auto-rows: minmax(2rem, auto);
 }
 .planning{
-    background-color: #EFEFF0;
+    background-color: #CCE4F2;
     display: grid;
     grid-column-gap: 0.2rem;
 	z-index: 1
@@ -80,31 +80,42 @@
 	color: red;
 }
 body{
-	/* background-image: url('../images/planning.jpg');
-	background-attachment: fixed; */
-	background-color: #C1CAD6;
+	background-image: url('../images/planning.jpg');
+	background-attachment: fixed;
 }
 .tooltype{
 	background-color: aquamarine;
 }
 .frame{
 	background-color: #fff;
-	margin-bottom: 3%;
-	padding: 5%;
 	box-shadow: 5px 5px 5px #000;
+	border-radius: 10%;
 }
 li .frame{
-	margin: 3%;
+	padding: 0.5rem;
+	display: inline-block;
 }
 .employee-frame{
-	padding: 5%;
+	padding: 0.5rem;
+	margin-right: 0.5rem;
 	box-shadow: 5px 5px 5px #000;
-	margin: 5%;
+	border-radius: 10%;
+	display: inline-block;
 }
 .employee-link{
 	color: #000;
 }
 .btn-black{
-	background-color: #01161E;
-	color: #DAE2DF;
+	background-color: #449DD1;
+	color: #FFF;
+}
+.planning-body{
+	background-color: #EDF4F9;
+}
+.title-frame{
+	background-color: #449DD1;
+	color: #FFF;
+	border-radius: 10%;
+	border-radius: 1rem;
+    margin: 1rem;
 }
