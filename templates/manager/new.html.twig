@@ -2,9 +2,15 @@
 
 {% block title %}New Manager{% endblock %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
+
 {% block body %}
-    <h1>Create new Manager</h1>
-
-    {{ include('manager/_form.html.twig') }}
-
+    <div class="container connexion">
+        <h1>Création du profil manager</h1>
+        <div class="form-groupe center">
+            {{ include('manager/_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

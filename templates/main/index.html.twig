@@ -2,22 +2,24 @@
 
 {% block title %}Gestionaire de plannings{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
 
-<div class="example-wrapper">
-<ul>
+{% block body %}
+
+<div class="container connexion">
+<H1>Géstionnaire de plannings</H1>
+
+<ul class="offset-2 col-8 center">
     <li>
         <a href=" {{path('login')}} ">
-            <button>Connexion</button>
+            <button class="btn btn-primary">Connexion</button>
         </a>
     </li>
     <li>
         <a href=" {{path('manager_new')}} ">
-            <button>Inscription</button>
+            <button class="btn btn-primary">Inscription</button>
         </a>
     </li>
 </ul>
