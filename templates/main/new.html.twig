@@ -62,162 +62,177 @@
 </style>
 
 <div class="container">
-    <h1>Semaine N°{{week}}</h1>
-    <span>du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
+    <div class="planning-body">
+        <div class="row justify-content-center"> 
+            <div class="title-frame col-6">
+                <h1>Semaine N°{{week}}</h1>
+                <span>du {{daysDates[0]|date('d/m/Y')}} au {{daysDates[6]|date('d/m/Y')}}</span>
+            </div>
+        </div>
 
-    <form action="" method="POST">
-        <select name="company" id="company">
-            {% for comp in app.user.companies %}
-            <option value="{{comp.id}}" 
-            {% if comp == company %}
-                selected
-            {% endif %}
-             >{{comp.name}}</option>
-            {% endfor %}
-        </select>
-        <input type="hidden" name="year" value="{{year}}">
-        <input type="hidden" name="week" value="{{week}}">
-        <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
-        <button class="btn" type="submit">Changer d'entreprise</button>
-    </form>
-    
-    <ul id="option-list" class="d-flex flex-raw justify-content-around">
-        <li>
-            <form action="" method="POST">
-                {% if week == 1 %}
-                    {% set week = 53 %}
-                    {% set year = year - 1 %}
-                {% endif %}
-                <input type="hidden" name="week" value="{{week - 1}}">
-                <input type="hidden" name="year" value="{{year}}">
-                <input type="hidden" name="company" value="{{company.id}}">
-                <button type="submit" class="btn">Semaine précédente</button>
-            </form>
-        </li>
-        <li><button class="btn" id="new-planning-company">Choisir sa semaine</button></li>
-        <li><a href=""><button class="btn">Envoyer le planning</button></a></li>
-        <li>
-            <form action="" method="POST">
-                {% if week >= 52 %}
-                    {% set week = week - 52 %}
-                    {% set year = year + 1 %}
-                {% endif %}
-                <input type="hidden" name="week" value="{{week + 1}}">
-                <input type="hidden" name="year" value="{{year}}">
-                <input type="hidden" name="company" value="{{company.id}}">
-                <button type="submit" class="btn">Semaine suivante</button>
-            </form>
-        </li>
-    </ul>
-    <ul id="employee-list" class="d-flex flex-raw justify-content-around">
-        {% for employee in company.employees %}
-            {% set workTimeLeft = employee.numberOfHours %}
-            {% for planning in employee.plannings %}
-                {% if planning.year == year and planning.week == week %}
-                    {% set workTimeLeft = workTimeLeft - planning.workTime %}
-                {% endif %}
-            {% endfor %}
-            <li class="employee"><span class="employee{{employee.id}}
-                employee-color"></span><a href="{{ path('employee_edit',{'id': employee.id}) }}">{{employee.firstName}} : 
-                    {% if  workTimeLeft < 0 %}
-                    <span id="{{employee.id}}worktime" class="negativ" >{{workTimeLeft}}</span>h</a></li>                
-                    {% else %}
-                    <span id="{{employee.id}}worktime" >{{workTimeLeft}}</span>h</a></li>
+        <form action="" method="POST">
+            <div class="input-group col-4 offset-4">
+                <div class="input-group-prepend">
+                    <button class="btn btn-black" type="submit" title="Changer d'entreprise"><i class="fas fa-exchange-alt"></i></button>
+                </div>
+                <select class="custom-select" name="company" id="company">
+                    {% for comp in app.user.companies %}
+                    <option value="{{comp.id}}" 
+                    {% if comp == company %}
+                        selected
                     {% endif %}
-        {% endfor %}
-    </ul>
-    <div class="planning-legende">
-        {# this div is use for planning-legend placement #}
-        <div></div>
-        {% for schedule in company.schedules %}
-            {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-            <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup-creation-form" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
-
-            {% set position = position + 1 %}
-            {% endif %}
-        {% endfor %}
-
-    </div>
-    
-    <div class="planning">
-        {% for schedule in company.schedules %}
-            {% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
-            
-                {% set startTime = (schedule.convertedFirstTimeStart - minOpenSchedule + shift) * 4 + 1 %}
-
-                {% set dayPlanningMorning = [] %}
-                {% set dayPlanningAfternoon = [] %}
-
-                {% for planning in plannings %}
-                    {% if planning.day == schedule.day %}
-                        {% if  planning.convertedStartTime < schedule.convertedFirstTimeStop %}
-                            {% set dayPlanningMorning = dayPlanningMorning|merge([planning]) %}
-                        {% else %}
-                            {% set dayPlanningAfternoon = dayPlanningAfternoon|merge([planning]) %}
-                        {% endif %}
+                    >{{comp.name}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="year" value="{{year}}">
+                <input type="hidden" name="week" value="{{week}}">
+                <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
+            </div>
+        </form>
+        
+        <ul id="option-list" class="d-flex flex-raw justify-content-around">
+            <li>
+                <form action="" method="POST">
+                    {% if week == 1 %}
+                        {% set week = 53 %}
+                        {% set year = year - 1 %}
+                    {% endif %}
+                    <input type="hidden" name="week" value="{{week - 1}}">
+                    <input type="hidden" name="year" value="{{year}}">
+                    <input type="hidden" name="company" value="{{company.id}}">
+                    <button type="submit" class="btn btn-black" title="Semaine précédente"><i class="fas fa-angle-double-left"></i></button>
+                </form>
+            </li>
+            <li><button class="btn btn-black" id="new-planning-company" title="Choisir sa semaine"><i class="far fa-calendar-alt"></i></button></li>
+            <li><a href=""><button class="btn btn-black" title="Envoyer le planning"><i class="far fa-envelope"></i></button></a></li>
+            <li>
+                <form action="" method="POST">
+                    {% if week >= 52 %}
+                        {% set week = week - 52 %}
+                        {% set year = year + 1 %}
+                    {% endif %}
+                    <input type="hidden" name="week" value="{{week + 1}}">
+                    <input type="hidden" name="year" value="{{year}}">
+                    <input type="hidden" name="company" value="{{company.id}}">
+                    <button type="submit" class="btn btn-black" title="Semaine suivante"><i class="fas fa-angle-double-right"></i></button>
+                </form>
+            </li>
+        </ul>
+        <ul id="employee-list" class="d-flex flex-raw justify-content-around">
+            {% for employee in company.employees %}
+                <div class="col-auto">
+                {% set workTimeLeft = employee.numberOfHours %}
+                {% for planning in employee.plannings %}
+                    {% if planning.year == year and planning.week == week %}
+                        {% set workTimeLeft = workTimeLeft - planning.workTime %}
                     {% endif %}
                 {% endfor %}
-                
-                
-                <div id="{{schedule.day.representationNumber}}morning" class="working-day" data-firsttimestart="{{schedule.convertedFirstTimeStart}}" data-firsttimestop="{{schedule.convertedFirstTimeStop}}" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
-
-                    {% set columnMorning = 1 %}
-                    
-                    {% for planning in dayPlanningMorning %}
-                    {% set start = (planning.convertedStartTime - schedule.convertedFirstTimeStart) * 4  + 1 %}
-                    
-                    <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnMorning}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
-                        {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
-                    </div>
-                    {% set columnMorning = columnMorning + 1 %}
-                    {% endfor %}
-                        
+                <li class="employee"><span class="employee{{employee.id}}
+                    employee-frame"><a href="{{ path('employee_edit',{'id': employee.id}) }}" class="employee-link">{{employee.firstName}} :</a></span>
+                        {% if  workTimeLeft < 0 %}
+                        <span class="frame">
+                            <span id="{{employee.id}}worktime" class="negativ" >{{workTimeLeft}}</span>h</li>
+                        </span>
+                        {% else %}
+                        <span class="frame">
+                            <span id="{{employee.id}}worktime">{{workTimeLeft}}</span>h</li>
+                        </span>
+                        {% endif %}
                 </div>
-                
-                {% if schedule.convertedSecondTimeStart != null %}
+            {% endfor %}
+        </ul>
+        <div class="planning-legende">
+            {# this div is use for planning-legend placement #}
+            <div></div>
+            {% for schedule in company.schedules %}
+                {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
+                <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup-creation-form" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
 
+                {% set position = position + 1 %}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+        
+        <div class="planning">
+            {% for schedule in company.schedules %}
+                {% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
                 
-                <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" data-secondtimestart="{{schedule.convertedSecondTimeStart}}" data-secondtimestop="{{schedule.convertedSecondTimeStop}}" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
+                    {% set startTime = (schedule.convertedFirstTimeStart - minOpenSchedule + shift) * 4 + 1 %}
+
+                    {% set dayPlanningMorning = [] %}
+                    {% set dayPlanningAfternoon = [] %}
+
+                    {% for planning in plannings %}
+                        {% if planning.day == schedule.day %}
+                            {% if  planning.convertedStartTime < schedule.convertedFirstTimeStop %}
+                                {% set dayPlanningMorning = dayPlanningMorning|merge([planning]) %}
+                            {% else %}
+                                {% set dayPlanningAfternoon = dayPlanningAfternoon|merge([planning]) %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
                     
-                    {% set columnAfternoon = 1 %}
                     
-                        {% for planning in dayPlanningAfternoon %}
-                        {% set startAfternoon = (planning.convertedStartTime - schedule.convertedSecondTimeStart) * 4 + 1 %}
+                    <div id="{{schedule.day.representationNumber}}morning" class="working-day" data-firsttimestart="{{schedule.convertedFirstTimeStart}}" data-firsttimestop="{{schedule.convertedFirstTimeStop}}" style="grid-column: {{column}}; grid-row: {{startTime}}/{{startTime + schedule.morningWorkTime}}; grid-template-rows: repeat({{schedule.morningWorkTime|round(0, 'floor') }}, 1rem);">
+
+                        {% set columnMorning = 1 %}
                         
-                        <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnAfternoon}}" style="grid-column:{{columnAfternoon}}; grid-row: {{startAfternoon}}/{{planning.workTime * 4 + startAfternoon}};">
+                        {% for planning in dayPlanningMorning %}
+                        {% set start = (planning.convertedStartTime - schedule.convertedFirstTimeStart) * 4  + 1 %}
+                        
+                        <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnMorning}}" style="grid-column:{{columnMorning}}; grid-row: {{start}}/{{planning.workTime * 4 + start}};">
                             {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
                         </div>
-                        
-                        {% set columnAfternoon = columnAfternoon + 1 %}
-                        
+                        {% set columnMorning = columnMorning + 1 %}
                         {% endfor %}
-                        
-
+                            
                     </div>
+                    
+                    {% if schedule.convertedSecondTimeStart != null %}
+
+                    
+                    <div id="{{schedule.day.representationNumber}}afternoon" class="working-day" data-secondtimestart="{{schedule.convertedSecondTimeStart}}" data-secondtimestop="{{schedule.convertedSecondTimeStop}}" style="grid-column: {{column}}; grid-row: {{schedule.morningWorkTime + schedule.mealBreak + startTime}}/{{schedule.morningWorkTime + schedule.mealBreak + schedule.afternoonWorkTime + startTime}};  grid-template-rows: repeat({{schedule.afternoonWorkTime|round(0, 'floor')}}, 1rem);">
+                        
+                        {% set columnAfternoon = 1 %}
+                        
+                            {% for planning in dayPlanningAfternoon %}
+                            {% set startAfternoon = (planning.convertedStartTime - schedule.convertedSecondTimeStart) * 4 + 1 %}
+                            
+                            <div class="employee{{planning.employee.id}} planning-employee" id="{{planning.id}}" data-column="{{columnAfternoon}}" style="grid-column:{{columnAfternoon}}; grid-row: {{startAfternoon}}/{{planning.workTime * 4 + startAfternoon}};">
+                                {{planning.employee.firstName}} : {{planning.startTime|date("G:i")}}h-{{planning.stopTime|date("G:i")}}h
+                            </div>
+                            
+                            {% set columnAfternoon = columnAfternoon + 1 %}
+                            
+                            {% endfor %}
+                            
+
+                        </div>
+                    
+                    {% endif %}
+                
+                    {% set column = column + 1 %}
                 
                 {% endif %}
-            
-                {% set column = column + 1 %}
-            
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
 
-        <!-- time show management , half and quarter of hour -->
-        {% set interval = 1 %}
-        {% if shift != 0 and endShift != 0 %}
-            {% set maxWorkTime = maxWorkTime + 2 %}
-        {% elseif shift != 0 or endShift != 0 %}
-            {% set maxWorkTime = maxWorkTime + 1 %}
-        {% endif %}
-        <!-- time show  -->
-        {% set interval = 1 %}
-        {% for i in 0..(maxWorkTime / 4 + shift + endShift) %}
-            <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}};">{{minSchedule.firstTimeStart|date("G") + i}}h</div>
-            {% set interval = interval + 4 %}
-        {% endfor %}
-  
-    </div>
+            <!-- time show management , half and quarter of hour -->
+            {% set interval = 1 %}
+            {% if shift != 0 and endShift != 0 %}
+                {% set maxWorkTime = maxWorkTime + 2 %}
+            {% elseif shift != 0 or endShift != 0 %}
+                {% set maxWorkTime = maxWorkTime + 1 %}
+            {% endif %}
+            <!-- time show  -->
+            {% set interval = 1 %}
+            {% for i in 0..(maxWorkTime / 4 + shift + endShift) %}
+                <div class="hour" style="grid-column: 1/{{workDay + 2}}; grid-row: {{interval}};">{{minSchedule.firstTimeStart|date("G") + i}}h</div>
+                {% set interval = interval + 4 %}
+            {% endfor %}
     
+        </div>
+    </div>
 </div>
 
 <div id="popup-creation-form" class="popup_block">

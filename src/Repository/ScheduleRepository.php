@@ -89,10 +89,14 @@ class ScheduleRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
 
-        if ($maxFirtsTime->getConvertedFirstTimeStop() > $maxSecondTime->getConvertedSecondTimeStop()) {
+        if ($maxSecondTime === null) {
             return $maxFirtsTime;
-        }else {
-            return $maxSecondTime;
+        }else{
+            if ($maxFirtsTime->getConvertedFirstTimeStop() > $maxSecondTime->getConvertedSecondTimeStop()) {
+                return $maxFirtsTime;
+            }else {
+                return $maxSecondTime;
+            }
         }
     }
 }

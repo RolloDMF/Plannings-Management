@@ -11,11 +11,11 @@
 
 {% set minOpenSchedule  = minSchedule.convertedFirstTimeStart %}
 {% if maxSchedule.convertedSecondTimeStop != null %}
-{% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
-{% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
+    {% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
+    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
 {% else %}
-{% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
-{% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
+    {% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
+    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
 {% endif %}
 
 <!-- we make a shift for none entier hour start and stop -->
