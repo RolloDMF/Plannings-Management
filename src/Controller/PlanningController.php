@@ -149,7 +149,7 @@ class PlanningController extends Controller
     /**
      * @Route("/duplicate", name="planning_duplicate",  methods="GET|POST")
      */
-    public function planningDuplication(PlanningRepository $planningRepo, CompanyRepository $companyRepo, Request $request, SerializerInterface $serializer)
+    public function planningDuplication(PlanningRepository $planningRepo, CompanyRepository $companyRepo, Request $request)
     {
         $datas = $request->request->all();
         $em = $this->getDoctrine()->getManager();
@@ -181,6 +181,28 @@ class PlanningController extends Controller
             $em->persist($newPlanning);
             $em->flush();
 
+        }
+
+        return $this->redirectToRoute('planning_index');
+    }
+
+    /**
+     * @Route("/suppres", name="planning_del",  methods="GET|POST")
+     */
+    public function planningSuppresion(PlanningRepository $planningRepo, CompanyRepository $companyRepo, Request $request)
+    {
+        $datas = $request->request->all();
+        $em = $this->getDoctrine()->getManager();
+
+        $year = $datas['year'];
+        $week = $datas['week'];
+        $company = $companyRepo->findOneById($datas['company']);
+
+        $plannings = $planningRepo->findByCompanyYearWeek($company, $year, $week);
+
+        foreach ($plannings as $planning) {
+            $em->remove($planning);
+            $em->flush();
         }
 
         return $this->redirectToRoute('planning_index');
