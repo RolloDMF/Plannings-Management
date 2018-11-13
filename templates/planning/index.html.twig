@@ -2,38 +2,47 @@
 
 {% block title %}Mes plannings{% endblock %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
+
 {% block body %}
 {% include 'nav.html.twig' %}
-    <div class="container">
+    <div class="container connexion">
         <h1>Mes plannings</h1>
 
         <form action="" method="POST">
-            <select name="company" id="company">
-                {% for comp in app.user.companies %}
-                <option value="{{comp.id}}" 
-                {% if comp == company %}
-                    selected
-                {% endif %}
-                 >{{comp.name}}</option>
-                {% endfor %}
-            </select>
-            <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
-            <button class="btn" type="submit">Changer d'entreprise</button>
+            <div class="input-group col-4 offset-4">
+                <div class="input-group-prepend">
+                    <button class="btn btn-black" type="submit" title="Changer d'entreprise"><i class="fas fa-exchange-alt"></i></button>
+                </div>
+                <select class="custom-select" name="company" id="company">
+                    {% for comp in app.user.companies %}
+                    <option value="{{comp.id}}" 
+                    {% if comp == company %}
+                        selected
+                    {% endif %}
+                    >{{comp.name}}</option>
+                    {% endfor %}
+                </select>
+                <input id="company-id" type="hidden" name="companiId" data-path="{{ path('planning_lastid',{'id': company.id}) }}">
+            </div>
         </form>
     
         {% set year = 0 %}
         {% set week =  0 %}
+        <div class="center flex-wrap">
         {% for planning in plannings %}
             {% if planning.week != week or planning.year != year %}
                 {% set year = planning.year %}
                 {% set week = planning.week %}
-                <div>
+                <div class="col-12 planning-list">
                     <span>Semaine N° {{planning.week}} année : {{planning.year}} 
                         <form class="d-inline" action="{{path("company_planning")}}" method="POST">
                             <input type="hidden" name="week" value="{{planning.week}}">
                             <input type="hidden" name="year" value="{{planning.year}}">
                             <input type="hidden" name="company" value="{{planning.company.id}}">
-                            <button class="btn">Voir</button>
+                            <button class="btn btn-black">Voir</button>
                         </form>
                         <form class="d-inline" action="{{path("company_planning")}}" method="POST">
                             <input type="hidden" name="week" value="{{planning.week}}">
@@ -45,5 +54,6 @@
                 </div>  
             {% endif %}
         {% endfor %}
+        </div>
     </div>
 {% endblock %}

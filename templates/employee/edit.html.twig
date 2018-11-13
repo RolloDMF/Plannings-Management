@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Employee{% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
+
+{% block title %}Edition de {{employee.firstName}}{% endblock %}
 
 {% block body %}
 
 {% include 'nav.html.twig' %}
+    <div class="container connexion">
+        <h1>Edition de {{employee.firstName}}</h1>
 
-    <h1>Edit Employee</h1>
+        {{ include('employee/_form.html.twig', {'button_label': 'Editer'}) }}
 
-    {{ include('employee/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('employee/_delete_form.html.twig') }}
 
-    <a href="{{ path('employee_index') }}">back to list</a>
-
-    {{ include('employee/_delete_form.html.twig') }}
+        <a href="{{ path('employee_index') }}">Retour liste</a>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ asset('js/formManip.js') }}"></script>
 {% endblock %}

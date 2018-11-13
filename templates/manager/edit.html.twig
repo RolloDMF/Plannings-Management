@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Manager{% endblock %}
+{% block title %}Edition de profil{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
 
 {% block body %}
 {% include 'nav.html.twig' %}
-    <h1>Edit Manager</h1>
+    <div class="container connexion">
+        <h1>Editer votre profil</h1>
 
-    {{ include('manager/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('manager/_form.html.twig', {'button_label': 'Update'}) }}
 
-    {{ include('manager/_delete_form.html.twig') }}
+        {{ include('manager/_delete_form.html.twig') }}
+
+        <a href="{{ path('manager_show',{'id': app.user.id } ) }}">Retour liste</a>
+    </div>
 {% endblock %}

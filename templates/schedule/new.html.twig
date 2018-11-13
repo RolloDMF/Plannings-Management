@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Schedule{% endblock %}
+{% block title %}Nouveaux Horaires{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
@@ -10,13 +10,13 @@
 {% include 'nav.html.twig' %}
 
     <div class="container connexion">
-        <h1>Horraires</h1>
+        <h1>Horaires</h1>
 
         <form action="{{path('schedule_new')}}" method="POST">
-            <div class="d-flex flex-wrap wrap justify-content-between center">
+            <div class="d-flex flex-wrap wrap justify-content-center center">
 
                 {% for day in days %}
-                <div id="schedule{{day.id}}" class="schedule{{day.id}} col-3">
+                <div id="schedule{{day.id}}" class="schedule{{day.id}} horraires-edition-box col-3">
                     <div>
                         <h2>{{day.name}}</h2>
                         <label class="required">Début de jourée (ou de matinée)</label>

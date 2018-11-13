@@ -2,43 +2,48 @@
 
 {% block title %}Liste des employés{% endblock %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
+
 {% block body %}
 {% include 'nav.html.twig' %}
-    <h1>Employee index</h1>
+    <div class="container connexion">
+        <h1>Vos Employés</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Entreprise</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Nombre d'heures</th>
-                <th>Congés restant</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for employee in employees %}
-            <tr>
-                <td>{{ employee.company.name }}</td>
-                <td>{{ employee.firstName }}</td>
-                <td>{{ employee.lastName }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.numberOfHours }}</td>
-                <td>{{ employee.remainingLeave }}</td>
-                <td>
-                    <a href="{{ path('employee_show', {'id': employee.id}) }}">Voir</a>
-                    <a href="{{ path('employee_edit', {'id': employee.id}) }}">Editer</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">Pas d employé trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Entreprise</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Nombre d'heures</th>
+                    <th>Congés restant</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.company.name }}</td>
+                    <td>{{ employee.firstName }}</td>
+                    <td>{{ employee.lastName }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.numberOfHours }}</td>
+                    <td>{{ employee.remainingLeave }}</td>
+                    <td>
+                        <a href="{{ path('employee_edit', {'id': employee.id}) }}">Editer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Pas d employé trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('employee_new') }}">Nouvel employé</a>
+        <a href="{{ path('employee_new') }}"><button class="btn btn-black create-btn">Nouvel employé</button></a>
+    </div>
 {% endblock %}

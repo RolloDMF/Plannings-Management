@@ -1,55 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Company{% endblock %}
+{% block title %}Entreprises{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
 
 {% block body %}
 {% include 'nav.html.twig' %}
-    <h1>Company</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nom</th>
-                <td>{{ company.name }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ company.address }}</td>
-            </tr>
-            <tr>
-                <th>Ville</th>
-                <td>{{ company.city }}</td>
-            </tr>
-            <tr>
-                <th>Code Postal</th>
-                <td>{{ company.zipCode }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('company_index') }}">back to list</a>
-    <a href="{{ path('company_edit', {'id': company.id}) }}">edit</a>
-
-    {{ include('company/_delete_form.html.twig') }}
-    
-    <h2>Horraires</h2>
-    <div class="d-flex flex-row justify-content-between">
-        {% for schedule in company.schedules %}
-        <div>
+    <div class="container connexion">
+        <h1>Horraires</h1>
+        <div class="container horraires-box">
+            {% for schedule in company.schedules %}
             {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-            <span class="scheduleDay">{{schedule.day.name}} :</span><br>
-            <span class="schedule">
-                {% if schedule.secondTimeStart != null %}
-                Matin : {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}</br>
-                Après-midi : {{schedule.secondTimeStart|date("G:i")}} - {{schedule.secondTimeStop|date("G:i")}}                
-                {% else %}
-                {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}
-                {% endif %}
-            </span>         
+            <div class="horraires-container col-7">
+                <span class="scheduleDay">{{schedule.day.name}} :</span><br>
+                <span class="schedule">
+                    {% if schedule.secondTimeStart != null %}
+                    Matin : {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}</br>
+                    Après-midi : {{schedule.secondTimeStart|date("G:i")}} - {{schedule.secondTimeStop|date("G:i")}}                
+                    {% else %}
+                    {{schedule.firstTimeStart|date("G:i")}} - {{schedule.firstTimeStop|date("G:i")}}
+                    {% endif %}
+                </span>         
+            </div>
             {% endif %}
+            {% endfor %}
+            <div class="col-7">
+                <a href="{{path("schedule_edit_form", {id: company.id})}}"><button class="create-btn btn-black btn" id="schedule-edition">Editer</button></a>
+            </div>
         </div>
-        {% endfor %}
-        <a href="{{path("schedule_edit_form", {id: company.id})}}"><button id="schedule-edition">Editer</button></a>
     </div>
-
 {% endblock %}

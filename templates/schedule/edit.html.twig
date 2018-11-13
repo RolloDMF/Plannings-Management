@@ -1,50 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edition d'horraires{% endblock %}
+{% block title %}Edition d'horaires{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+{% endblock %}
 
 {% block body %}
 {% include 'nav.html.twig' %}
 
-    <form action="{{path('schedule_edit')}}" method="POST">
-        <div class="d-flex flex-row justify-content-between">
+    <div class="container connexion">
+        <h1>Horaires</h1>
 
-            {% for schedule in schedules %}
-            <div id="schedule{{schedule.day.id}}" class="schedule{{schedule.day.id}}">
-                <input type="hidden" name="schedule{{schedule.day.id}}[id]" value="{{schedule.id}}">
-                <div>
-                    <h2>{{schedule.day.name}}</h2>
-                    <label class="required">Début de jourée (ou de matinée)</label>
-                    <input type="time" name="schedule{{schedule.day.id}}[firstTimeStart]"
-                    {% if schedule.FirstTimeStart != null %}
-                    value="{{schedule.FirstTimeStart|date("H:i")}}">
-                    {% endif %}
-                </div>
-                <div>
-                    <label class="required">Fin de journée  (ou de matinée)</label>
-                    <input type="time" name="schedule{{schedule.day.id}}[firstTimeStop]"
-                    {% if schedule.FirstTimeStop != null %}
-                    value="{{schedule.FirstTimeStop|date("H:i")}}">     
-                    {% endif %} 
-                </div>
-                <div>
-                    <label class="required">Début d'après midi (si fermeture entre matin et après midi)</label>
-                    <input type="time" name="schedule{{schedule.day.id}}[secondTimeStart]"
-                    {% if schedule.SecondTimeStart != null %}
-                    value="{{schedule.SecondTimeStart|date("H:i")}}">   
-                    {% endif %}
-                </div>
-                <div>
-                    <label class="required">Fin d'après midi (si fermeture entre matin et après midi)</label>
-                    <input type="time" name="schedule{{schedule.day.id}}[secondTimeStop]"
-                    {% if schedule.SecondTimeStop != null %}
-                    value="{{schedule.SecondTimeStop|date("H:i")}}">                     
-                    {% endif %}
-                </div>
-            </div>       
-            {% endfor %}
-        </div>
-        <button type="submit">Enregistrer</button>
-    </form>
+        <form action="{{path('schedule_edit')}}" method="POST">
+            <div class="d-flex flex-wrap wrap justify-content-center center">
+
+                {% for schedule in schedules %}
+                <div id="schedule{{schedule.day.id}}" class="schedule{{schedule.day.id}} horraires-edition-box col-3">
+                    <input type="hidden" name="schedule{{schedule.day.id}}[id]" value="{{schedule.id}}">
+                    <div>
+                        <h2>{{schedule.day.name}}</h2>
+                        <label class="required">Début de jourée (ou de matinée)</label>
+                        <input type="time" name="schedule{{schedule.day.id}}[firstTimeStart]"
+                        {% if schedule.FirstTimeStart != null %}
+                        value="{{schedule.FirstTimeStart|date("H:i")}}">
+                        {% else %}
+                        > 
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="required">Fin de journée  (ou de matinée)</label>
+                        <input type="time" name="schedule{{schedule.day.id}}[firstTimeStop]"
+                        {% if schedule.FirstTimeStop != null %}
+                        value="{{schedule.FirstTimeStop|date("H:i")}}">
+                        {% else %}
+                        >      
+                        {% endif %} 
+                    </div>
+                    <div>
+                        <label class="required">Début d'après midi (si fermeture entre matin et après midi)</label>
+                        <input type="time" name="schedule{{schedule.day.id}}[secondTimeStart]"
+                        {% if schedule.SecondTimeStart != null %}
+                        value="{{schedule.SecondTimeStart|date("H:i")}}">
+                        {% else %}
+                        > 
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="required">Fin d'après midi (si fermeture entre matin et après midi)</label>
+                        <input type="time" name="schedule{{schedule.day.id}}[secondTimeStop]"
+                        {% if schedule.SecondTimeStop != null %}
+                         value="{{schedule.SecondTimeStop|date("H:i")}}">
+                        {% else %}
+                        > 
+                        {% endif %}
+                    </div>
+                </div>       
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary create-btn" type="submit">Enregistrer</button>
+        </form>
+        <a href="{{ path('company_index') }}">Retour</a>
+    </div>
 
 
 {% endblock %}

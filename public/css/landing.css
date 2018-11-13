@@ -24,10 +24,42 @@ li{
 }
 
 .create-btn{
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 50px 0 50px 0;
 }
 
-#manager label, #company label{
+#manager label, #company label, #employee label{
     display: block;
+}
+
+.planning-list{
+    margin: 20px 0 20px 0;
+}
+
+thead{
+    background-color: #CCE4F2;
+}
+
+.update-btn{
+    margin: 40px 0 10px 0;
+}
+
+.del-btn{
+    margin-bottom: 20px;
+}
+
+.horraires-container{
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid;
+}
+
+.horraires-box{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.horraires-edition-box{
+    border: solid 1px;
+    padding: 10px;
 }
