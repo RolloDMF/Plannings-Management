@@ -165,7 +165,7 @@ class Planning
         return $this->week;
     }
 
-    public function setWeek(int $week): self
+    public function setWeek($week): self
     {
         $this->week = $week;
 

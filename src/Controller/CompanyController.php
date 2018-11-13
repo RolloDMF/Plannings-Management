@@ -23,6 +23,7 @@ class CompanyController extends Controller
     public function index(CompanyRepository $companyRepository): Response
     {
         return $this->render('company/index.html.twig', [
+            //we take all company for the connected user
             'companies' => $companyRepository->findByManager($this->getUser()),
             'page_title' => 'Liste des entreprises']);
     }

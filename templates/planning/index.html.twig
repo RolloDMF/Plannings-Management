@@ -44,6 +44,16 @@
                             <input type="hidden" name="company" value="{{planning.company.id}}">
                             <button class="btn btn-black">Voir</button>
                         </form>
+                        <form class="d-inline" action="{{path("planning_duplicate")}}" id="{{planning.week}}{{planning.year}}" method="POST">
+                            {# send the current week and year for dupplication #}
+                            <input type="hidden" name="current_week" value="{{planning.week}}">
+                            <input type="hidden" name="current_year" value="{{planning.year}}">
+                            {# send week ans year that user wich duplicate #}
+                            <input type="hidden" id="duplicate_week_{{planning.week}}{{planning.year}}" name="week" value="">
+                            <input type="hidden" id="duplicate_year_{{planning.week}}{{planning.year}}" name="year" value="">
+                            <input type="hidden" name="company" value="{{planning.company.id}}">
+                            <button class="btn btn-success duplication">Dupliquer</button>
+                        </form>
                         <form class="d-inline" action="{{path("company_planning")}}" method="POST">
                             <input type="hidden" name="week" value="{{planning.week}}">
                             <input type="hidden" name="year" value="{{planning.year}}">
@@ -55,5 +65,25 @@
             {% endif %}
         {% endfor %}
         </div>
+
+        {# pop up form for duplication #}
+        <div id="popup-duplication-form" class="popup_block" data-form-id="0">
+            <form name="planning-duplication" method="POST" id="planning-duplication">
+                <div>
+                    <h2>Préciser la semaine et l'année cible de la duplication</h2>
+                    <div>
+                        <label for="year-pop">Année</label>
+                        <input type="number" name="year-pop" id="year-pop">
+                    </div>
+                    <div>
+                        <label for="week-pop">Semaine</label>
+                        <input type="number" name="week-pop" id="week-pop">
+                    </div>
+                    <button class="btn btn-success" id="planning-duplication-btn">Confirmer</button>
+                    <button class="btn cancel-btn" id="cancel-edit-btn">Anuler</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 {% endblock %}

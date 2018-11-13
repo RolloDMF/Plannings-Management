@@ -15,6 +15,7 @@ use App\Repository\CompanyRepository;
 use App\Repository\DayRepository;
 use App\Service\ConverterController;
 use App\Entity\Company;
+use App\Service\DateWithYWD;
 
 
 /**
@@ -143,5 +144,45 @@ class PlanningController extends Controller
 
         $json = $serializer->serialize($id, 'json');
         return new Response($json);
+    }
+
+    /**
+     * @Route("/duplicate", name="planning_duplicate",  methods="GET|POST")
+     */
+    public function planningDuplication(PlanningRepository $planningRepo, CompanyRepository $companyRepo, Request $request, SerializerInterface $serializer)
+    {
+        $datas = $request->request->all();
+        $em = $this->getDoctrine()->getManager();
+
+        $year = $datas['current_year'];
+        $week = $datas['current_week'];
+        $company = $companyRepo->findOneById($datas['company']);
+
+        $plannings = $planningRepo->findByCompanyYearWeek($company, $year, $week);
+        dump($plannings);
+        dump($request->request->all());
+
+        foreach ($plannings as $planning) {
+            
+            $newPlanning = clone $planning;
+
+            $year = $datas['year'];
+            $week = $datas['week']; 
+
+            $newPlanning->setYear($year);
+            $newPlanning->setWeek($week);
+
+            $day = $newPlanning->getDay()->getRepresentationNumber();
+
+            $date = DateWithYWD::dateWithYearWeek($day, $year, $week);
+
+            $newPlanning->setDayDate($date);
+
+            $em->persist($newPlanning);
+            $em->flush();
+
+        }
+
+        return $this->redirectToRoute('planning_index');
     }
 }

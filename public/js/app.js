@@ -137,7 +137,7 @@ var app = {
 
         // make last hour line white
         var hours = $('.hour');
-        $(hours[hours.length - 1]).css({'background-color' : 'rgba(255,255,255,0.1)'})
+        $(hours[hours.length - 1]).css({'background-color' : 'rgba(237,244,249,1)'})
 
         
         //creation planning form handleling
@@ -253,6 +253,60 @@ var app = {
             }
             return false;
         });
+
+        //planning duplication
+        $('.duplication').on('click', function(e){
+
+            e.preventDefault();
+
+            var formId = $(this).parent('form').attr('id');
+            var popID = 'popup-duplication-form'; 
+            var popWidth = 500;       
+            
+            $('#' + popID).fadeIn().css({ 'width': popWidth});
+            
+            var popMargTop = ($('#' + popID).height() + 80) / 2;
+            var popMargLeft = ($('#' + popID).width() + 80) / 2;
+            
+            
+            $('#' + popID).css({ 
+                'margin-top' : -popMargTop,
+                'margin-left' : -popMargLeft
+            });
+            
+            $('body').append('<div id="fade"></div>');
+            $('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
+            
+            $('#popup-duplication-form').data('form-id', formId);
+
+            console.log($('#popup-duplication-form').data('form-id'));
+            
+            return false;
+        });
+
+        $('#planning-duplication').on('submit', function(e){
+            e.preventDefault();
+
+            var year = $('#year-pop').val();
+            var week = $('#week-pop').val();
+
+            var formId = $('#popup-duplication-form').data('form-id');
+
+            $('#duplicate_year_' + formId).val(year);
+            $('#duplicate_week_' + formId).val(week);
+
+            if (week === "" || year === "") {
+                window.alert("Veuillez remplir les deux champs 'années et semaine");
+                
+            }else{
+                $('#' + formId).submit();
+                console.log('#' + formId);
+                
+            }
+
+            console.log('submit');
+            
+        })
 
     },
 
