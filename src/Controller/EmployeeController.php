@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CompanyRepository;
 
 /**
  * @Route("/employee")
@@ -29,9 +30,14 @@ class EmployeeController extends Controller
     /**
      * @Route("/new", name="employee_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, CompanyRepository $companyRepo): Response
     {
+        $manager = $this->getUser();
+        $company = $companyRepo->findOneByManager($manager);
+
         $employee = new Employee();
+        //we set one random manager's company, in order to retrive the manager in the form builder.
+        $employee->setCompany($company);
         $form = $this->createForm(EmployeeType::class, $employee);
         $form->handleRequest($request);
 
@@ -64,7 +70,7 @@ class EmployeeController extends Controller
     /**
      * @Route("/{id}/edit", name="employee_edit", methods="GET|POST")
      */
-    public function edit(Request $request, Employee $employee): Response
+    public function edit(Request $request, Employee $employee, CompanyRepository $companyRepo): Response
     {
         $form = $this->createForm(EmployeeType::class, $employee);
         $form->handleRequest($request);

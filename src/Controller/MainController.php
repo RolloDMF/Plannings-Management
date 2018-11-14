@@ -95,7 +95,7 @@ class MainController extends Controller
         }
 
         $plannings = $planningRepo->findByCompanyYearWeek($company, $year, $week);
-
+        
             return $this->render('main/new.html.twig', [
                 'company' => $company,
                 'minSchedule' => $minOpenSchedule,
@@ -106,7 +106,5 @@ class MainController extends Controller
                 'week' => $week,
                 'page_title' => "Bienvenus ". $this->getUser()->getUsername(),
         ]);
-    }        
-
-    
+    }  
 }
