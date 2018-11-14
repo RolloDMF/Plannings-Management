@@ -1,5 +1,12 @@
 var app = {
     init: function(){
+
+        //print management
+        $('#print-planning').on('click', function() {
+            console.log('coucou');
+            $('.planning-body').print({noPrintSelector: "#option-list"});
+            return false;
+        });
         
         // pop up creation
         $('a.poplight').on('click', function() {
@@ -484,6 +491,7 @@ var app = {
             return false;
         }
     },
+
 
 }
 $(app.init);
