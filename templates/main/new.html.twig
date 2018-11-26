@@ -15,6 +15,10 @@
     {% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
 {% endif %}
 
+{% if endShift == 1 %}
+    {% set endShift = 0 %}
+{% endif %}
+
 <!-- we make a shift for none entier hour start and stop -->
 {% set shift =  minOpenSchedule - minSchedule.firstTimeStart|date("G") %}
 

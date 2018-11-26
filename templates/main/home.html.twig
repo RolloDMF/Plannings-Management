@@ -10,13 +10,19 @@
 {% set year = "now"|date("Y") %}
 
 {% set minOpenSchedule  = minSchedule.convertedFirstTimeStart %}
-{% if maxSchedule.convertedSecondTimeStop != null %}
-    {% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
-    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
-{% else %}
-    {% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
-    {% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
-{% endif %}
+
+    {% if maxSchedule.convertedSecondTimeStop != null %}
+        {% set maxCloseSchedule = maxSchedule.convertedSecondTimeStop %}
+        {% set endShift =  1 - (maxCloseSchedule - maxSchedule.secondTimeStop|date("G")) %}
+    {% else %}
+        {% set maxCloseSchedule = maxSchedule.convertedFirstTimeStop %}
+        {% set endShift =  1 - (maxCloseSchedule - maxSchedule.firstTimeStop|date("G")) %}
+    {% endif %}
+
+    {% if endShift == 1 %}
+        {% set endShift = 0 %}
+    {% endif %}
+    
 
 <!-- we make a shift for none entier hour start and stop -->
 {% set shift =  minOpenSchedule - minSchedule.firstTimeStart|date("G") %}
@@ -28,9 +34,11 @@
 {% set lastDay = "" %}
 
 {% for schedule in company.schedules %}
-{% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
-{% set workDay = workDay + 1 %}
-{% endif %}
+
+    {% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
+        {% set workDay = workDay + 1 %}
+    {% endif %}
+
 {% endfor %}
 
 {% set maxWorkTime =  (maxCloseSchedule - minOpenSchedule) * 4 %}
@@ -47,7 +55,7 @@
     {% for employee in company.employees %}
     .employee{{employee.id}}{
         background-color: {{employee.color}};
-        opacity: .8;
+        opacity: 0.8;
         color: rgba(0, 0, 0, 1);
     }
     {% endfor %}
