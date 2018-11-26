@@ -24,9 +24,7 @@
 
 {% set column = 2 %}
 {% set position = 2 %}
-{% set positionPlanning = 1 %}
 {% set workDay = 0 %}
-{% set lastDay = "" %}
 
 {% for schedule in company.schedules %}
     {% if schedule.convertedFirstTimeStart != null or  schedule.convertedSecondTimeStart != null %}
