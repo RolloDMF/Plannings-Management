@@ -20,19 +20,19 @@
                     <div>
                         <h2>{{day.name}}</h2>
                         <label class="required">Début de jourée (ou de matinée)</label>
-                        <input type="time" name="schedule{{day.id}}[firstTimeStart]">
+                        <input id="firstTimeStart{{day.id}}" type="time" name="schedule{{day.id}}[firstTimeStart]">
                     </div>
                     <div>
                         <label class="required">Fin de journée  (ou de matinée)</label>
-                        <input type="time" name="schedule{{day.id}}[firstTimeStop]">
+                        <input id="firstTimeStop{{day.id}}" type="time" name="schedule{{day.id}}[firstTimeStop]">
                     </div>
                     <div>
                         <label class="required">Début d'après midi (si fermeture entre matin et après midi)</label>
-                        <input type="time" name="schedule{{day.id}}[secondTimeStart]">
+                        <input id="secondTimeStart{{day.id}}" type="time" name="schedule{{day.id}}[secondTimeStart]">
                     </div>
                     <div>
                         <label class="required">Fin d'après midi (si fermeture entre matin et après midi)</label>
-                        <input type="time" name="schedule{{day.id}}[secondTimeStop]">
+                        <input id="secondTimeStop{{day.id}}" type="time" name="schedule{{day.id}}[secondTimeStop]">
                     </div>
                     <div>
                         <input type="hidden" name="schedule{{day.id}}[day]" value="{{day.name}}">

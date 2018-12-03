@@ -48,13 +48,16 @@ class EmployeeRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllOrderByCompany()
+    public function findAllOrderByCompany($manager)
     {
         return $this->createQueryBuilder('e')
+            ->innerJoin('e.company', 'c')
+            ->Where('c.manager = :manager')
             ->orderBy('e.company')
+            ->setParameter('manager', $manager)
             ->getQuery()
             ->getResult()
         ;
     }
-  
 }
+

@@ -46,7 +46,7 @@
     {% for employee in company.employees %}
         .employee{{employee.id}}{
             background-color: {{employee.color}};
-            opacity: .8;
+            opacity: 0.8;
             color: rgba(0, 0, 0, 1);
         }
     {% endfor %}
@@ -144,13 +144,14 @@
             {% endfor %}
         </ul>
         <div class="planning-legende">
+        
             {# this div is use for planning-legend placement #}
             <div></div>
             {% for schedule in company.schedules %}
                 {% if schedule.firstTimeStart != null or  schedule.secondTimeStart != null %}
-                <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup-creation-form" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
+                    <div id="day{{schedule.day.representationNumber}}" class="legende"><a href="#" data-width="500" data-rel="popup-creation-form" data-day="{{schedule.day.representationNumber}}" data-date = "{{daysDates[schedule.day.representationNumber - 1]|date('Y-m-d')}}" class="poplight">{{schedule.day.name}}</a></div>
 
-                {% set position = position + 1 %}
+                    {% set position = position + 1 %}
                 {% endif %}
             {% endfor %}
 

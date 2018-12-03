@@ -66,9 +66,7 @@ class PlanningController extends Controller
         $em->flush();
 
         $json = $serializer->serialize($datas, 'json');
-        return new Response($json);
-        
-
+        return new Response($json);   
     }
 
     /**
@@ -159,8 +157,6 @@ class PlanningController extends Controller
         $company = $companyRepo->findOneById($datas['company']);
 
         $plannings = $planningRepo->findByCompanyYearWeek($company, $year, $week);
-        dump($plannings);
-        dump($request->request->all());
 
         foreach ($plannings as $planning) {
             
@@ -187,7 +183,7 @@ class PlanningController extends Controller
     }
 
     /**
-     * @Route("/suppres", name="planning_del",  methods="GET|POST")
+     * @Route("/suppres", name="planning_del",  methods="POST")
      */
     public function planningSuppresion(PlanningRepository $planningRepo, CompanyRepository $companyRepo, Request $request)
     {

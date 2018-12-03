@@ -3,10 +3,75 @@ var app = {
 
         //print management
         $('#print-planning').on('click', function() {
-            console.log('coucou');
             $('.planning-body').print({noPrintSelector: "#option-list"});
             return false;
         });
+
+        //shedule creation management
+        for (let index = 1; index < 8; index++) {
+
+            var firstTimeStop = $('#firstTimeStop' + index);
+            var secondTimeStart = $('#secondTimeStart' + index);
+            var secondTimeStop =  $('#secondTimeStop' + index);
+
+
+            $(firstTimeStop).focusout( function(){
+
+                convertFTStart = app.transformTime($('#firstTimeStart' + index).val());
+                convertFTStop = app.transformTime($(this).val());
+
+                if ($(this).val() !== "") {
+                    
+                    if ($('#firstTimeStart' + index).val() === "") {
+                        window.alert('le debut de la premiere partie n\'est pas détèrminé');
+                        $(this).val(null);
+                    }else if (convertFTStart >= convertFTSto) {
+                        window.alert('La fin de la première demis journée ne peut pas etre avant ou en même temps que son début');
+                        $(this).val(null);
+                    };
+
+                }
+
+            });
+
+            $(secondTimeStart).focusout( function(){
+
+                convertFTStop = app.transformTime($('#firstTimeStop' + index).val());
+                convertSTStart = app.transformTime($(this).val());
+
+                if ($(this).val() !== "") {
+
+                    if ($('#firstTimeStop' + index).val() === "") {
+                        $(this).val(null);
+                        window.alert('La premiere partie n\est pas renseignée');
+                    }else  if (convertFTStop >= convertSTStart) {
+                        window.alert('le debut de la deuxième moitiée de la journée ne peut pas etre avant la fin de la première moitée');
+                        $(this).val(null);
+                    };
+
+                }
+        
+            });
+
+            $(secondTimeStop).focusout( function(){
+
+                convertSTStart = app.transformTime($('#secondTimeStart' + index).val());
+                convertSTStop = app.transformTime($(this).val());
+
+                if ($(this).val() !== "") {
+
+                    if ($('#secondTimeStart' + index).val() === "") {
+                        window.alert('le debut de la deuxième partie n\'est pas détèrminé');
+                        $(this).val(null);
+                    }else if (convertSTStart >= convertSTStop) {
+                        window.alert('La fin de la deuxième demis journée ne peut pas etre avant ou en même temps que son début');
+                        $(this).val(null);
+                    };
+
+                }
+                           
+            });   
+        };
         
         // pop up creation
         $('a.poplight').on('click', function() {
@@ -178,7 +243,7 @@ var app = {
                     method: $(this).attr('method'),
                     url: $(this).attr('action'),
                     data: $(this).serializeArray(),
-                }).done( function(response){
+                }).done( function(){
                     jQuery.getJSON( $('#company-id').data('path'), function(datas) {
                         var id = datas
                         app.createPlanning(data, id);           
@@ -214,7 +279,7 @@ var app = {
             if(app.check(day, startTime, stopTime, e)) {
                 window.alert('les horraires saisies ne sont pas correctes');
             }else{
-            
+
                 jQuery.getJSON( '/planning/'+ id, function(data) {
                     
                     //worktime RAZ
@@ -223,16 +288,11 @@ var app = {
                     var workTime = stopTime - startTime;
                     
                     var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
-
+                    
                     $('#' + data['employee'] + 'worktime').text(parseFloat(actualEmployeeWorktime) + parseFloat(workTime));
-
-                    if ((parseFloat(actualEmployeeWorktime) + parseFloat(workTime)) < 0 ) {
-                        $('#' + data['employee'] + 'worktime').addClass('negativ');
-                    }else{
-                        $('#' + data['employee'] + 'worktime').removeClass('negativ');
-                    };
             
                 });
+
                 //ajax call     
                 $.ajax({
                     method: $(this).attr('method'),
@@ -256,6 +316,24 @@ var app = {
                 }).fail(function(textmsg,errorThrown){
                     console.log(textmsg);
                     console.log(errorThrown);
+                });
+
+                            
+                jQuery.getJSON( '/planning/'+ id, function(data) {
+                    
+                    //worktime RAZ
+                    var startTime = app.transformTime(data['starttime']);
+                    var stopTime = app.transformTime(data['stoptime']);
+                    var workTime = stopTime - startTime;
+                    
+                    var actualEmployeeWorktime = $('#' + data['employee'] + 'worktime').text();
+
+                    if ((parseFloat(actualEmployeeWorktime)) < 0 ) {
+                        $('#' + data['employee'] + 'worktime').addClass('negativ');
+                    }else{
+                        $('#' + data['employee'] + 'worktime').removeClass('negativ');
+                    };
+            
                 });
             }
             return false;
@@ -372,8 +450,6 @@ var app = {
             $('#' + id).on('click', app.listener);
 
         }
-
-
     },
 
     //convert time base 60 on base 100

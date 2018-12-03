@@ -48,7 +48,6 @@ class EmployeeType extends AbstractType
                 },
                 'choice_label' => 'name',
             ));
-            dump($manager);
     }
 
     public function configureOptions(OptionsResolver $resolver)

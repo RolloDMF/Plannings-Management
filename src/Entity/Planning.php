@@ -186,7 +186,6 @@ class Planning
 
     public function hydrate($data, $company, $day, $employee, $converter)
     {
-        print_r($data);
         $startTime = new \DateTime($data['startTime']);
         $stopTime = new \DateTime($data['stopTime']);
         $date = new \DateTime($data['date']);
