@@ -25,7 +25,7 @@ var app = {
                     if ($('#firstTimeStart' + index).val() === "") {
                         window.alert('le debut de la premiere partie n\'est pas détèrminé');
                         $(this).val(null);
-                    }else if (convertFTStart >= convertFTSto) {
+                    }else if (convertFTStart >= convertFTStop) {
                         window.alert('La fin de la première demis journée ne peut pas etre avant ou en même temps que son début');
                         $(this).val(null);
                     };
